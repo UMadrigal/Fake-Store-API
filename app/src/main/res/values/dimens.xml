@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="common_padding_64dp">64dp</dimen>
+    <dimen name="padding_160dp">160dp</dimen>
+    <dimen name="common_padding_16dp">16dp</dimen>
+    <dimen name="common_padding_18dp">18dp</dimen>
+    <dimen name="padding_256dp">256dp</dimen>
+    <dimen name="common_padding_32dp">32dp</dimen>
+</resources>

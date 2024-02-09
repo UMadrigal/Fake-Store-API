@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Fake Store</string>
+    <string name="text_title_login">Bienvenido</string>
+    <string name="text_subtitle_login">Ingresa tus datos para continuar</string>
 </resources>
