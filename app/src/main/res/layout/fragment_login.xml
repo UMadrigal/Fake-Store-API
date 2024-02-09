@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primaryColor"
-    tools:context=".ui.LoginActivity">
+    tools:context=".ui.login.LoginActivity">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -101,7 +101,6 @@
             <!--                    app:drawableStartCompat="@drawable/ic_exclamation" />-->
 
             <LinearLayout
-                android:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="83dp"

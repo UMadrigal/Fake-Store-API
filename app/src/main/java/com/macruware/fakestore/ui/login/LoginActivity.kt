@@ -1,4 +1,4 @@
-package com.macruware.fakestore.ui
+package com.macruware.fakestore.ui.login
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

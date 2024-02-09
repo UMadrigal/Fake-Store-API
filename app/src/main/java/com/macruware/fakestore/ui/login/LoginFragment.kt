@@ -1,4 +1,4 @@
-package com.macruware.fakestore.ui
+package com.macruware.fakestore.ui.login
 
 import android.content.Context
 import android.os.Bundle
@@ -11,13 +11,22 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.macruware.fakestore.R
 import com.macruware.fakestore.databinding.FragmentLoginBinding
 
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
+
+    private val callback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            onBtnBackPressed()
+        }
+    }
 
     private var isShowPassword = false
 
@@ -26,6 +35,7 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentLoginBinding.inflate(layoutInflater, container, false)
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,callback)
         return binding.root
     }
 
@@ -52,8 +62,7 @@ class LoginFragment : Fragment() {
         }
 
         binding.btnGoToRegister.setOnClickListener {
-//            findNavControllar navigate
-            Toast.makeText(requireActivity(),"Ir a registro", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
 
         binding.etPassword.setOnEditorActionListener { _, actionId, event ->
@@ -75,5 +84,19 @@ class LoginFragment : Fragment() {
 
     private fun initUI() {
 
+    }
+
+    private fun onBtnBackPressed(){
+        val alertDialog = AlertDialog.Builder(requireActivity())
+        alertDialog
+            .setTitle("Fake Store")
+            .setMessage("¿Deseas salir de la aplicación?")
+
+        alertDialog.setPositiveButton("Salir") { _, _ ->
+            requireActivity().finish()
+        }
+        alertDialog.setNegativeButton("Cancelar") { dialog, _ -> dialog.dismiss() }
+            .create()
+            .show()
     }
 }
