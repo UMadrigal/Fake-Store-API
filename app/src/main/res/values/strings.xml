@@ -2,4 +2,7 @@
     <string name="app_name">Fake Store</string>
     <string name="text_title_login">Bienvenido</string>
     <string name="text_subtitle_login">Ingresa tus datos para continuar</string>
+    <string name="text_btn_login">Iniciar sesión</string>
+    <string name="text_hint_username">username</string>
+    <string name="text_hint_password">password</string>
 </resources>
