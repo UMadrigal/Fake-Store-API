@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -50,11 +49,11 @@ class LoginFragment : Fragment() {
         binding.btnShowPassword.setOnClickListener {
             isShowPassword = !isShowPassword
             if (isShowPassword) {
-                binding.btnShowPassword.setImageResource(R.drawable.ic_show_password_true)
+                binding.btnShowPassword.setImageResource(R.drawable.ic_hide_password)
                 binding.etPassword.transformationMethod =
                     HideReturnsTransformationMethod.getInstance()
             } else {
-                binding.btnShowPassword.setImageResource(R.drawable.ic_show_password_false)
+                binding.btnShowPassword.setImageResource(R.drawable.ic_show_password)
                 binding.etPassword.transformationMethod = PasswordTransformationMethod.getInstance()
             }
             // Mover el cursor al final del texto
