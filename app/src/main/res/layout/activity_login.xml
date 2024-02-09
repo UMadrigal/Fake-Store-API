@@ -21,19 +21,17 @@
                     android:id="@+id/tvTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="128dp"
                     android:layout_gravity="center"
+                    android:layout_marginTop="128dp"
                     android:text="@string/text_title_login"
-                    android:textSize="28sp"
-                    android:textColor="@color/white"/>
+                    style="@style/TitleText"/>
 
                 <TextView
                     android:id="@+id/tvSubtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/text_subtitle_login"
-                    android:textColor="@color/white"/>
+                    android:text="@string/text_subtitle_login"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -49,13 +47,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/common_padding_16dp"
-                    android:backgroundTint="@color/white"
-                    android:hint="Ingresa tu nombre de usuario"
+                    android:hint="@string/text_hint_username"
                     android:imeOptions="actionNext"
-                    android:singleLine="true"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/gray"
-                    android:textSize="14sp" />
+                    style="@style/EditTextStyle"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -75,15 +69,11 @@
                         android:id="@+id/etPassword"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@color/white"
                         android:imeOptions="actionDone"
                         android:inputType="textPassword"
                         android:paddingEnd="44dp"
-                        android:singleLine="true"
-                        android:textColor="@color/white"
-                        android:hint="Ingresa tu contraseña"
-                        android:textColorHint="@color/gray"
-                        android:textSize="14sp" />
+                        android:hint="@string/text_hint_password"
+                        style="@style/EditTextStyle"/>
 
                     <ImageButton
                         android:id="@+id/btnShowPassword"
@@ -122,8 +112,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/text_dont_you_have_account"
-                        android:textColor="@color/gray" />
+                        android:text="@string/text_dont_you_have_account" />
 
                     <TextView
                         android:id="@+id/btnGoToRegister"
@@ -157,8 +146,7 @@
             android:layout_marginVertical="@dimen/common_padding_16dp"
             android:layout_gravity="center"
             android:text="@string/text_btn_login"
-            android:textSize="24sp"
-            android:textColor="@color/white"/>
+            style="@style/SubTitleText"/>
 
     </FrameLayout>
 

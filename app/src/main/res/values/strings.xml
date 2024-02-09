@@ -7,4 +7,6 @@
     <string name="text_label_password">Contraseña</string>
     <string name="text_dont_you_have_account">¿Aun no tienes cuenta?</string>
     <string name="text_btn_go_to_register">Regístrate</string>
+    <string name="text_hint_username">Ingresa tu nombre de usuario</string>
+    <string name="text_hint_password">Ingresa tu contraseña</string>
 </resources>
