@@ -1,6 +1,7 @@
 package com.macruware.fakestore.ui.login
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
@@ -57,6 +58,11 @@ class RegisterFragment : Fragment() {
         initUI()
     }
 
+    private fun initUI() {
+        fieldRestrictions()
+        enableButton()
+    }
+
     private fun initListeners() {
         // Go to Login
         binding.btnGoToLogin.setOnClickListener {
@@ -109,11 +115,6 @@ class RegisterFragment : Fragment() {
         Toast.makeText(requireActivity(), "Registrando usuario...", Toast.LENGTH_SHORT).show()
     }
 
-    private fun initUI() {
-        fieldRestrictions()
-        enableButton()
-    }
-
     // Se llama cada vez que se actualice si es válido o no
     private fun enableButton(
         username: Boolean = isValidUsername,
@@ -127,7 +128,13 @@ class RegisterFragment : Fragment() {
         isValidPassword = pass
 
         // Activar botón de registrar solo si todos los campos son válidos
-        binding.btnRegister.isEnabled = isValidUsername && isValidEmail && isValidPassword
+        if(isValidUsername && isValidEmail && isValidPassword){
+            binding.btnRegister.isEnabled = true
+            binding.btnRegister.setBackgroundColor(requireContext().getColor(R.color.secondaryColor))
+        } else {
+            binding.btnRegister.isEnabled = false
+            binding.btnRegister.setBackgroundColor(requireContext().getColor(R.color.darkerGray))
+        }
     }
 
     private fun fieldRestrictions() {
@@ -259,4 +266,5 @@ class RegisterFragment : Fragment() {
         // Mover el cursor al final del texto
         editText.setSelection(editText.text?.length ?: 0)
     }
+
 }
