@@ -18,7 +18,7 @@
     <string name="text_hint_confirm_password">Confirma tu contraseña</string>
     <string name="text_have_already_an_account">¿Ya tienes una cuenta?</string>
     <string name="text_btn_go_to_login">Inicia sesión</string>
-    <string name="text_error_password_restrictions">Ingresa una contraseña de al menos 8 dígitos</string>
+    <string name="text_error_password_restrictions">Ingresa una contraseña de al menos 6 dígitos</string>
     <string name="text_error_password_confirm">Las contraseñas no coinciden</string>
     <string name="text_error_email">Ingresa un email válido</string>
     <string name="text_error_usename">Ingresa un nombre de usuario válido</string>

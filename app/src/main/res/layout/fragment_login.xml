@@ -7,6 +7,13 @@
     android:background="@color/primaryColor"
     tools:context=".ui.login.LoginActivity">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible"/>
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -52,6 +59,15 @@
                 style="@style/EditTextStyle"/>
 
             <TextView
+                android:id="@+id/tvUsernameError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/common_padding_16dp"
+                android:text="@string/text_error_usename"
+                style="@style/TextErrorStyle"
+                tools:visibility="visible" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/common_padding_16dp"
@@ -87,18 +103,14 @@
 
             </FrameLayout>
 
-            <!--                <TextView-->
-            <!--                    android:id="@+id/tvPasswordError"-->
-            <!--                    android:visibility="gone"-->
-            <!--                    tools:visibility="visible"-->
-            <!--                    android:layout_width="match_parent"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:layout_marginHorizontal="@dimen/common_padding_16dp"-->
-            <!--                    android:layout_marginTop="2dp"-->
-            <!--                    android:textColor="@color/errorColor"-->
-            <!--                    android:text="Ingresa una contraseña de al menos 8 dígitos"-->
-            <!--                    android:drawablePadding="4dp"-->
-            <!--                    app:drawableStartCompat="@drawable/ic_exclamation" />-->
+            <TextView
+                android:id="@+id/tvPasswordError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/common_padding_16dp"
+                android:text="@string/text_error_password_restrictions"
+                style="@style/TextErrorStyle"
+                tools:visibility="visible" />
 
             <LinearLayout
                 android:layout_width="match_parent"
