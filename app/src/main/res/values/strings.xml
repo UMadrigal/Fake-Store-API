@@ -23,4 +23,5 @@
     <string name="text_error_email">Ingresa un email válido</string>
     <string name="text_error_usename">Ingresa un nombre de usuario válido</string>
     <string name="text_btn_register">Registrarse</string>
+    <string name="text_subtitle_register">Crea una cuenta</string>
 </resources>

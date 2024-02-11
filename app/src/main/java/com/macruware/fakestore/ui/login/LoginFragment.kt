@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.macruware.fakestore.R
 import com.macruware.fakestore.databinding.FragmentLoginBinding
+import com.macruware.fakestore.ui.login.LoginState.*
 
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
@@ -100,15 +101,54 @@ class LoginFragment : Fragment() {
     }
 
     private fun stateCredentialsSuccess() {
-        // call to api with credentials
-        Toast.makeText(requireActivity(), "Calling to API...", Toast.LENGTH_SHORT).show()
-        binding.progressBar.visibility = View.VISIBLE
         usernameSuccess()
         passwordSuccess()
+
+        val apiResponse : LoginState
+        apiResponse = Success()
+
+        when(apiResponse){
+            Loading -> apiStateLoading()
+            is Success -> apiStateSuccess(apiResponse)
+            is Error -> apiStateError(apiResponse)
+        }
+
     }
 
-    private fun stateCredentialsError() {
-        Toast.makeText(requireActivity(), "Usuario o contraseña incorrectos. Intente nuevamente.", Toast.LENGTH_SHORT).show()
+    private fun apiStateLoading() {
+        binding.progressBar.visibility = View.VISIBLE
+        disableListeners()
+    }
+
+    private fun apiStateSuccess(state: Success) {
+        binding.progressBar.visibility = View.GONE
+        Toast.makeText(requireActivity(), "Acceso correcto. token: ${state.token}", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun apiStateError(state: Error) {
+        binding.progressBar.visibility = View.GONE
+        stateCredentialsError(state.error)
+        enableListeners()
+    }
+
+    private fun enableListeners() {
+        binding.etUsername.isEnabled = true
+        binding.etPassword.isEnabled = true
+        binding.btnShowPassword.isEnabled = true
+        binding.btnGoToRegister.isEnabled = true
+        binding.btnLogin.isEnabled = true
+    }
+
+    private fun disableListeners() {
+        binding.etUsername.isEnabled = false
+        binding.etPassword.isEnabled = false
+        binding.btnShowPassword.isEnabled = false
+        binding.btnGoToRegister.isEnabled = false
+        binding.btnLogin.isEnabled = false
+    }
+
+    private fun stateCredentialsError(error: String = "Usuario o contraseña incorrectos. Intente nuevamente.") {
+        Toast.makeText(requireActivity(), error, Toast.LENGTH_SHORT).show()
         binding.progressBar.visibility = View.GONE
         usernameError()
         passwordError()
@@ -198,7 +238,7 @@ class LoginFragment : Fragment() {
     private fun onBtnBackPressed(){
         val alertDialog = AlertDialog.Builder(requireActivity())
         alertDialog
-            .setTitle("Fake Store")
+            .setTitle("Laza")
             .setMessage("¿Deseas salir de la aplicación?")
 
         alertDialog.setPositiveButton("Salir") { _, _ ->

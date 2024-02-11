@@ -1,14 +1,12 @@
-package com.macruware.fakestore.ui.login
+package com.macruware.fakestore.ui.register
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
-import android.util.Log
 import android.util.Patterns
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
@@ -21,9 +19,11 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
 import com.macruware.fakestore.R
 import com.macruware.fakestore.databinding.FragmentRegisterBinding
+import com.macruware.fakestore.ui.register.RegisterState.*
 
 class RegisterFragment : Fragment() {
     private var _binding: FragmentRegisterBinding? = null
@@ -43,6 +43,12 @@ class RegisterFragment : Fragment() {
     private var isValidEmail = false
     private var isValidPassword = false
 
+    private var username = ""
+    private var userEmail = ""
+    private var userPassword = ""
+
+    private var isLoading = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -60,7 +66,7 @@ class RegisterFragment : Fragment() {
 
     private fun initUI() {
         fieldRestrictions()
-        enableButton()
+        enableRegister()
     }
 
     private fun initListeners() {
@@ -105,18 +111,63 @@ class RegisterFragment : Fragment() {
         }
 
         binding.btnRegister.setOnClickListener {
-            stateLoading()
-            // Llamar a la API y recuperar state
+           stateCredentialsSuccess()
         }
     }
 
-    private fun stateLoading() {
+    private fun stateCredentialsSuccess() {
+
+        val apiResponse : RegisterState
+        apiResponse = Success(username)
+
+        isLoading = apiResponse == Loading
+        when(apiResponse){
+            Loading -> apiStateLoading()
+            is Success -> apiStateSuccess(apiResponse)
+            is Error -> apiStateError(apiResponse)
+        }
+    }
+
+    private fun apiStateLoading() {
         binding.progressBar.visibility = View.VISIBLE
-        Toast.makeText(requireActivity(), "Registrando usuario...", Toast.LENGTH_SHORT).show()
+        disableListeners()
+    }
+
+    private fun apiStateSuccess(state: Success) {
+        binding.progressBar.visibility = View.GONE
+        Toast.makeText(requireActivity(), "Nuevo usuario registrado. ${state.newUser}", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun apiStateError(state: Error) {
+        binding.progressBar.visibility = View.GONE
+        Toast.makeText(requireActivity(), state.error, Toast.LENGTH_SHORT).show()
+        enableListeners()
+    }
+
+    private fun enableListeners() {
+        binding.etUsername.isEnabled = true
+        binding.etEmail.isEnabled = true
+        binding.etPassword.isEnabled = true
+        binding.btnShowPassword.isEnabled = true
+        binding.etConfirmPassword.isEnabled = true
+        binding.btnShowPasswordConfirm.isEnabled = true
+        binding.btnGoToLogin.isEnabled = true
+        binding.btnRegister.isEnabled = true
+    }
+
+    private fun disableListeners() {
+        binding.etUsername.isEnabled = false
+        binding.etEmail.isEnabled = false
+        binding.etPassword.isEnabled = false
+        binding.btnShowPassword.isEnabled = false
+        binding.etConfirmPassword.isEnabled = false
+        binding.btnShowPasswordConfirm.isEnabled = false
+        binding.btnGoToLogin.isEnabled = false
+        binding.btnRegister.isEnabled = false
     }
 
     // Se llama cada vez que se actualice si es válido o no
-    private fun enableButton(
+    private fun enableRegister(
         username: Boolean = isValidUsername,
         email: Boolean = isValidEmail,
         pass: Boolean = isValidPassword
@@ -149,12 +200,11 @@ class RegisterFragment : Fragment() {
 
                 if (!isValidName && userInput.isNotEmpty()) {
                     binding.tvUsernameError.visibility = View.VISIBLE
-//                    isValidUsername = false
-                    enableButton(username = false)
+                    enableRegister(username = false)
                 } else {
                     binding.tvUsernameError.visibility = View.GONE
-//                    isValidUsername = true
-                    enableButton(username = true)
+                    username = userInput
+                    enableRegister(username = true)
                 }
 
             }
@@ -172,12 +222,11 @@ class RegisterFragment : Fragment() {
                 if (userInput.isNotEmpty()) {
                     if (pattern.matcher(userInput).matches()) {
                         binding.tvEmailError.visibility = View.GONE
-//                            isValidEmail = true
-                        enableButton(email = true)
+                        enableRegister(email = true)
                     } else {
                         binding.tvEmailError.visibility = View.VISIBLE
-//                            isValidEmail = false
-                        enableButton(email = false)
+                        userEmail = userInput
+                        enableRegister(email = false)
                     }
                 } else {
                     binding.tvEmailError.visibility = View.GONE
@@ -201,7 +250,7 @@ class RegisterFragment : Fragment() {
 
         // Validate User Password
         var password = ""
-
+        var confirmPassword = ""
         binding.etPassword.filters = arrayOf(inputFilter)
         binding.etPassword.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -211,12 +260,13 @@ class RegisterFragment : Fragment() {
                 if (userInput.isNotEmpty()) {
                     if (userInput.length < minPasswordLength) {
                         binding.tvPasswordError.visibility = View.VISIBLE
-                        password = ""
                     } else {
                         binding.tvPasswordError.visibility = View.GONE
-                        password = userInput
                     }
                 }
+
+                password = userInput
+                verifyPassword(password, confirmPassword)
 
             }
             override fun afterTextChanged(p0: Editable?) {}
@@ -230,15 +280,15 @@ class RegisterFragment : Fragment() {
                 val userInput = s.toString()
 
                 if (userInput.isNotEmpty()) {
-                    if (userInput.length < minPasswordLength || userInput != password) {
+                    if (userInput.length < minPasswordLength) {
                         binding.tvConfirmPasswordError.visibility = View.VISIBLE
-                        enableButton(pass = false)
                     } else {
                         binding.tvConfirmPasswordError.visibility = View.GONE
-                        enableButton(pass = true)
                     }
                 }
 
+                confirmPassword = userInput
+                verifyPassword(password, confirmPassword)
 
             }
 
@@ -246,8 +296,50 @@ class RegisterFragment : Fragment() {
         })
     }
 
+    private fun verifyPassword(password: String, confirmPassword: String) {
+        if (confirmPassword.isNotEmpty()) {
+            if (password.isNotEmpty()) {
+                if (password == confirmPassword) {
+                    if (password.length >= minPasswordLength && confirmPassword.length >= minPasswordLength){
+                        enableRegister(pass = true)
+                        userPassword = password
+                        binding.tvPasswordError.visibility = View.GONE
+                        binding.tvConfirmPasswordError.visibility = View.GONE
+                    } else {
+                        enableRegister(pass = false)
+                        binding.tvConfirmPasswordError.visibility = View.VISIBLE
+                    }
+                } else {
+                    enableRegister(pass = false)
+                    binding.tvConfirmPasswordError.visibility = View.VISIBLE
+                }
+            } else {
+                enableRegister(pass = false)
+                binding.tvPasswordError.visibility = View.VISIBLE
+                binding.tvConfirmPasswordError.visibility = View.VISIBLE
+            }
+        } else {
+            enableRegister(pass = false)
+            binding.tvConfirmPasswordError.visibility = View.GONE
+        }
+    }
+
     private fun onBtnBackPressed() {
-        findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+        if (isLoading){
+            val alertDialog = AlertDialog.Builder(requireActivity())
+            alertDialog
+                .setTitle("Laza")
+                .setMessage("¿Deseas salir de la aplicación?")
+
+            alertDialog.setPositiveButton("Salir") { _, _ ->
+                requireActivity().finish()
+            }
+            alertDialog.setNegativeButton("Cancelar") { dialog, _ -> dialog.dismiss() }
+                .create()
+                .show()
+        } else {
+            findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+        }
     }
 
     private fun showPassword(isShow: Boolean, button: ImageButton, editText: EditText) {
