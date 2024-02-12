@@ -3,8 +3,7 @@
     android:id="@+id/tvDrawerMenuCategoryName"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:layout_marginStart="32dp"
-    android:paddingStart="16dp"
+    android:paddingStart="64dp"
     android:paddingEnd="8dp"
     android:gravity="center_vertical"
     android:text="@string/text_drawer_menu_categories"
@@ -12,4 +11,4 @@
     android:textColor="@color/gray"
     android:clickable="true"
     android:focusable="true"
-    style="@style/SubTitleText"/>
+    style="@style/SubTitleTextClickable"/>

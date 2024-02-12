@@ -225,14 +225,11 @@
                     android:id="@+id/rvCategories"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="8dp"
                     tools:listitem="@layout/item_category_name"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:layout_marginTop="8dp"
                     android:paddingStart="16dp"
                     android:paddingEnd="8dp"
                     android:gravity="start|center"
@@ -244,7 +241,6 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:layout_marginTop="8dp"
                     android:paddingStart="16dp"
                     android:paddingEnd="8dp"
                     android:gravity="start|center"
