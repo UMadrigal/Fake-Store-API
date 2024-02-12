@@ -1,6 +1,7 @@
 package com.macruware.fakestore.ui.register
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
@@ -23,6 +24,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
 import com.macruware.fakestore.R
 import com.macruware.fakestore.databinding.FragmentRegisterBinding
+import com.macruware.fakestore.ui.main.MainActivity
 import com.macruware.fakestore.ui.register.RegisterState.*
 
 class RegisterFragment : Fragment() {
@@ -136,6 +138,7 @@ class RegisterFragment : Fragment() {
     private fun apiStateSuccess(state: Success) {
         binding.progressBar.visibility = View.GONE
         Toast.makeText(requireActivity(), "Nuevo usuario registrado. ${state.newUser}", Toast.LENGTH_SHORT).show()
+        goToMain()
     }
 
     private fun apiStateError(state: Error) {
@@ -322,6 +325,11 @@ class RegisterFragment : Fragment() {
             enableRegister(pass = false)
             binding.tvConfirmPasswordError.visibility = View.GONE
         }
+    }
+
+    private fun goToMain(){
+        val intent = Intent(requireActivity(), MainActivity::class.java)
+        startActivity(intent)
     }
 
     private fun onBtnBackPressed() {

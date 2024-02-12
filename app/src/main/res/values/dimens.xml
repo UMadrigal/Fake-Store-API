@@ -6,4 +6,5 @@
     <dimen name="common_padding_18dp">18dp</dimen>
     <dimen name="padding_256dp">256dp</dimen>
     <dimen name="common_padding_32dp">32dp</dimen>
+    <dimen name="common_size_header_button">45dp</dimen>
 </resources>

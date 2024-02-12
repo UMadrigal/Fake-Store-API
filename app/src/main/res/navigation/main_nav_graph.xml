@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/homeContainerFragment">
+
+    <fragment
+        android:id="@+id/homeContainerFragment"
+        android:name="com.macruware.fakestore.ui.home.HomeContainerFragment"
+        android:label="fragment_home_container"
+        tools:layout="@layout/fragment_home_container" />
+    <fragment
+        android:id="@+id/cartContainerFragment"
+        android:name="com.macruware.fakestore.ui.cart.CartContainerFragment"
+        android:label="fragment_cart_container"
+        tools:layout="@layout/fragment_cart_container" />
+    <fragment
+        android:id="@+id/favoritesContainerFragment"
+        android:name="com.macruware.fakestore.ui.favorites.FavoritesContainerFragment"
+        android:label="fragment_favorites_container"
+        tools:layout="@layout/fragment_favorites_container" />
+    <fragment
+        android:id="@+id/purchasesContainerFragment"
+        android:name="com.macruware.fakestore.ui.purchases.PurchasesContainerFragment"
+        android:label="fragment_purchases_container"
+        tools:layout="@layout/fragment_purchases_container" />
+    <fragment
+        android:id="@+id/notificationsContainerFragment"
+        android:name="com.macruware.fakestore.ui.notifications.NotificationsContainerFragment"
+        android:label="fragment_notifications_container"
+        tools:layout="@layout/fragment_notifications_container" />
+</navigation>

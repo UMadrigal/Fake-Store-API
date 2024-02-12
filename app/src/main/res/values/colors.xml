@@ -7,6 +7,7 @@
     <color name="errorColor">#FFF34D49</color>
 
     <color name="primaryColor">#FF1B262C</color>
+    <color name="primaryColorFaded">#FF222E34</color>
     <color name="secondaryColor">#FF235F6F</color>
     <color name="secondaryColorLight">#FF50DAFF</color>
 </resources>

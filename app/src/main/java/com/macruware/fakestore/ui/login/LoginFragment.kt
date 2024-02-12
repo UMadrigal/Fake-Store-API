@@ -1,6 +1,7 @@
 package com.macruware.fakestore.ui.login
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
@@ -22,6 +23,7 @@ import androidx.navigation.fragment.findNavController
 import com.macruware.fakestore.R
 import com.macruware.fakestore.databinding.FragmentLoginBinding
 import com.macruware.fakestore.ui.login.LoginState.*
+import com.macruware.fakestore.ui.main.MainActivity
 
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
@@ -123,6 +125,7 @@ class LoginFragment : Fragment() {
     private fun apiStateSuccess(state: Success) {
         binding.progressBar.visibility = View.GONE
         Toast.makeText(requireActivity(), "Acceso correcto. token: ${state.token}", Toast.LENGTH_SHORT).show()
+        goToMain()
     }
 
     private fun apiStateError(state: Error) {
@@ -233,6 +236,11 @@ class LoginFragment : Fragment() {
             }
             override fun afterTextChanged(p0: Editable?) {}
         })
+    }
+
+    private fun goToMain(){
+        val intent = Intent(requireActivity(), MainActivity::class.java)
+        startActivity(intent)
     }
 
     private fun onBtnBackPressed(){

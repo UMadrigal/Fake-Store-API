@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Laza</string>
+
+    <string name="nav_open">OPEN NAVIGATION DRAWER</string>
+    <string name="nav_close">CLOSE NAVIGATION DRAWER</string>
+
     <string name="text_title_login">Bienvenido</string>
     <string name="text_subtitle_login">Ingresa tus datos para continuar</string>
     <string name="text_btn_login">Iniciar sesión</string>
