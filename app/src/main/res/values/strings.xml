@@ -9,7 +9,7 @@
     <string name="text_btn_login">Iniciar sesión</string>
     <string name="text_label_username">Usuario</string>
     <string name="text_label_password">Contraseña</string>
-    <string name="text_dont_you_have_account">¿Aun no tienes cuenta?</string>
+    <string name="text_dont_you_have_account">¿Aún no tienes cuenta?</string>
     <string name="text_btn_go_to_register">Regístrate</string>
     <string name="text_hint_username">Ingresa tu nombre de usuario</string>
     <string name="text_hint_password">Ingresa tu contraseña</string>
@@ -27,5 +27,8 @@
     <string name="text_error_email">Ingresa un email válido</string>
     <string name="text_error_usename">Ingresa un nombre de usuario válido</string>
     <string name="text_btn_register">Registrarse</string>
-    <string name="text_subtitle_register">Crea una cuenta</string>
+    <string name="text_subtitle_register">Crea una cuenta nueva</string>
+    <string name="text_drawer_menu_categories">Categorías</string>
+    <string name="text_drawer_menu_purchases">Mis compras</string>
+    <string name="text_drawer_menu_logout">Cerrar sesión</string>
 </resources>

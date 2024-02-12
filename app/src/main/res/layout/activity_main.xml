@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="start"
-    tools:context=".ui.main.MainActivity">
+    tools:context=".ui.main.MainActivity"
+    tools:openDrawer="start">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -22,11 +23,11 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
-                android:paddingHorizontal="16dp"
-                android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:elevation="4dp">
+                android:elevation="4dp"
+                android:paddingHorizontal="16dp">
 
                 <ImageButton
                     android:id="@+id/btnMenu"
@@ -35,61 +36,61 @@
                     android:background="@android:color/transparent"
                     android:foreground="?selectableItemBackground"
                     android:src="@drawable/ic_btn_side_menu"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageButton
-                    android:visibility="invisible"
                     android:id="@+id/btnBack"
                     android:layout_width="@dimen/common_size_header_button"
                     android:layout_height="@dimen/common_size_header_button"
                     android:background="@android:color/transparent"
                     android:foreground="?selectableItemBackground"
                     android:src="@drawable/ic_btn_back"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:visibility="invisible"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
                     android:layout_height="@dimen/common_size_header_button"
                     android:layout_marginHorizontal="16dp"
                     app:cardBackgroundColor="@color/primaryColorFaded"
-                    app:cardElevation="0dp"
                     app:cardCornerRadius="10dp"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:cardElevation="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/btnNotifications"
                     app:layout_constraintStart_toEndOf="@+id/btnBack"
-                    app:layout_constraintEnd_toStartOf="@id/btnNotifications">
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <EditText
                         android:id="@+id/etSearch"
+                        style="@style/EditTextStyle"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/common_size_header_button"
                         android:layout_marginHorizontal="8dp"
-                        android:hint="Search..."
-                        android:textColor="@color/gray"
+                        android:background="@android:color/transparent"
                         android:drawableStart="@drawable/ic_search"
                         android:drawablePadding="8dp"
-                        android:background="@android:color/transparent"
-                        style="@style/EditTextStyle"/>
+                        android:hint="Search..."
+                        android:textColor="@color/gray" />
 
                 </androidx.cardview.widget.CardView>
 
                 <TextView
-                    android:visibility="invisible"
                     android:id="@+id/tvTitle"
+                    style="@style/SubTitleText"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/common_size_header_button"
                     android:layout_marginHorizontal="16dp"
                     android:gravity="center"
-                    tools:text="Categoría"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:visibility="invisible"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/btnBack"
                     app:layout_constraintEnd_toStartOf="@id/btnNotifications"
-                    style="@style/SubTitleText"/>
+                    app:layout_constraintStart_toEndOf="@+id/btnBack"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Categoría" />
 
                 <ImageButton
                     android:id="@+id/btnNotifications"
@@ -97,10 +98,10 @@
                     android:layout_height="@dimen/common_size_header_button"
                     android:background="@android:color/transparent"
                     android:foreground="?selectableItemBackground"
-                    android:src="@drawable/ic_btn_back"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:src="@drawable/ic_notification"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -111,8 +112,8 @@
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/header"
             android:layout_above="@id/bottomNavView"
+            android:layout_below="@+id/header"
             app:defaultNavHost="true"
             app:navGraph="@navigation/main_nav_graph" />
 
@@ -120,16 +121,16 @@
             android:id="@+id/bottomNavView"
             android:layout_width="match_parent"
             android:layout_height="72dp"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
             android:background="@color/primaryColorFaded"
             app:itemActiveIndicatorStyle="@null"
-            app:labelVisibilityMode="labeled"
             app:itemIconTint="@color/selector_bottom_menu_item_icon_tint"
-            app:itemTextColor="@color/selector_bottom_menu_item_icon_tint"
-            app:itemPaddingTop="16dp"
             app:itemPaddingBottom="14dp"
+            app:itemPaddingTop="16dp"
+            app:itemTextColor="@color/selector_bottom_menu_item_icon_tint"
+            app:labelVisibilityMode="labeled"
             app:menu="@menu/bottom_nav_menu" />
 
     </RelativeLayout>
@@ -139,6 +140,123 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/primaryColorFaded"/>
+        android:background="@color/primaryColorFaded">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/btnMyAccount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?selectableItemBackground"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:id="@+id/imageProfile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:src="@drawable/img_profile_picture"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvCustomerName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:text="User name"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageProfile"
+                        app:layout_constraintTop_toTopOf="@+id/imageProfile"
+                        app:layout_constraintVertical_bias="0.0"
+                        style="@style/SubTitleText"/>
+
+                    <TextView
+                        android:id="@+id/tvMyAccount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="8dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:text="Mi Cuenta"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageProfile"
+                        app:layout_constraintTop_toBottomOf="@+id/tvCustomerName" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="8dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="8dp"
+                    android:gravity="start|center"
+                    android:text="@string/text_drawer_menu_categories"
+                    android:drawablePadding="8dp"
+                    app:drawableStartCompat="@drawable/ic_categories"
+                    style="@style/SubTitleText"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvCategories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="8dp"
+                    tools:listitem="@layout/item_category_name"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="8dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="8dp"
+                    android:gravity="start|center"
+                    android:text="@string/text_drawer_menu_purchases"
+                    android:drawablePadding="8dp"
+                    app:drawableStartCompat="@drawable/ic_purchases"
+                    style="@style/SubTitleTextClickable"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="8dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="8dp"
+                    android:gravity="start|center"
+                    android:text="@string/text_drawer_menu_logout"
+                    android:drawablePadding="8dp"
+                    app:drawableStartCompat="@drawable/ic_logout"
+                    style="@style/SubTitleTextClickable"/>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

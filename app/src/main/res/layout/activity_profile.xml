@@ -6,4 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".ui.profile.ProfileActivity">
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/profileFragmentContainerView"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:navGraph="@navigation/profile_nav_graph"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
