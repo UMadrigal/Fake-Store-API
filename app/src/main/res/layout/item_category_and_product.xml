@@ -28,7 +28,8 @@
             android:id="@+id/btnViewAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/text_btn_view_all" />
+            android:text="@string/text_btn_view_all"
+            android:textColor="@color/secondaryColor"/>
 
     </LinearLayout>
 
@@ -72,7 +73,7 @@
                         android:layout_width="160dp"
                         android:layout_height="235dp"
                         android:scaleType="fitXY"
-                        tools:src="@drawable/img_place_holder"/>
+                        tools:src="@drawable/img_product"/>
 
                 </androidx.cardview.widget.CardView>
 

@@ -1,4 +1,4 @@
-package com.macruware.fakestore.ui.home.adapter
+package com.macruware.fakestore.ui.home.plp.adapter
 
 import android.view.View
 import android.widget.ImageView

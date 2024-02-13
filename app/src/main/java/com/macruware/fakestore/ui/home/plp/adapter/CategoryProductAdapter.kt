@@ -1,8 +1,7 @@
-package com.macruware.fakestore.ui.home.adapter
+package com.macruware.fakestore.ui.home.plp.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.AdapterView.OnItemClickListener
 import androidx.recyclerview.widget.RecyclerView
 import com.macruware.fakestore.R
 import com.macruware.fakestore.domain.model.CategoryProductModel

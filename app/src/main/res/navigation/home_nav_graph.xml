@@ -7,7 +7,25 @@
 
     <fragment
         android:id="@+id/homeProductListFragment"
-        android:name="com.macruware.fakestore.ui.home.HomeProductListFragment"
+        android:name="com.macruware.fakestore.ui.home.plp.HomeProductListFragment"
         android:label="fragment_home_product_list"
-        tools:layout="@layout/fragment_home_product_list" />
+        tools:layout="@layout/fragment_home_product_list" >
+        <action
+            android:id="@+id/action_homeProductListFragment_to_homeCategoryPlpFragment"
+            app:destination="@id/homeCategoryPlpFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeCategoryPlpFragment"
+        android:name="com.macruware.fakestore.ui.home.categoryplp.HomeCategoryPlpFragment"
+        android:label="fragment_home_category_plp"
+        tools:layout="@layout/fragment_home_category_plp" >
+        <action
+            android:id="@+id/action_homeCategoryPlpFragment_to_homeProductListFragment"
+            app:destination="@id/homeProductListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchedProductFragment"
+        android:name="com.macruware.fakestore.ui.home.searchedplp.SearchedProductFragment"
+        android:label="fragment_searched_product"
+        tools:layout="@layout/fragment_searched_product" />
 </navigation>

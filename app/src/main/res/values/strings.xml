@@ -32,4 +32,7 @@
     <string name="text_drawer_menu_purchases">Mis compras</string>
     <string name="text_drawer_menu_logout">Cerrar sesión</string>
     <string name="text_btn_view_all">Ver todo</string>
+    <string name="text_alert_on_exit_app">¿Deseas salir de la aplicación?</string>
+    <string name="text_exit">Salir</string>
+    <string name="text_cancel">Cancelar</string>
 </resources>

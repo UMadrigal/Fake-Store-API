@@ -1,4 +1,4 @@
-package com.macruware.fakestore.ui.home
+package com.macruware.fakestore.ui.home.plp
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,16 +6,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.macruware.fakestore.R
 import com.macruware.fakestore.databinding.FragmentHomeProductListBinding
 import com.macruware.fakestore.domain.model.CategoryProductModel
 import com.macruware.fakestore.domain.model.ProductModel
-import com.macruware.fakestore.ui.home.adapter.CategoryProductAdapter
+import com.macruware.fakestore.ui.home.plp.adapter.CategoryProductAdapter
 
 class HomeProductListFragment : Fragment() {
     private var _binding: FragmentHomeProductListBinding? = null
     private val binding get() = _binding!!
+
+    private val callback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            onBtnBackPressed()
+        }
+    }
 
     private lateinit var categoryProductAdapter: CategoryProductAdapter
 
@@ -24,6 +33,7 @@ class HomeProductListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeProductListBinding.inflate(layoutInflater,container,false)
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         return binding.root
     }
 
@@ -90,5 +100,20 @@ class HomeProductListFragment : Fragment() {
         Toast.makeText(requireActivity(),
             "Ver todo de categoría: ${category.category}, ${category.productList.size} productos.",
             Toast.LENGTH_SHORT).show()
+        findNavController().navigate(R.id.action_homeProductListFragment_to_homeCategoryPlpFragment)
+    }
+
+    private fun onBtnBackPressed(){
+        val alertDialog = AlertDialog.Builder(requireActivity())
+        alertDialog
+            .setTitle(getString(R.string.app_name))
+            .setMessage(getString(R.string.text_alert_on_exit_app))
+
+        alertDialog.setPositiveButton(getString(R.string.text_exit)) { _, _ ->
+            requireActivity().finish()
+        }
+        alertDialog.setNegativeButton(getString(R.string.text_cancel)) { dialog, _ -> dialog.dismiss() }
+            .create()
+            .show()
     }
 }

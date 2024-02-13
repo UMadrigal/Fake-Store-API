@@ -246,13 +246,13 @@ class LoginFragment : Fragment() {
     private fun onBtnBackPressed(){
         val alertDialog = AlertDialog.Builder(requireActivity())
         alertDialog
-            .setTitle("Laza")
-            .setMessage("¿Deseas salir de la aplicación?")
+            .setTitle(getString(R.string.app_name))
+            .setMessage(getString(R.string.text_alert_on_exit_app))
 
-        alertDialog.setPositiveButton("Salir") { _, _ ->
+        alertDialog.setPositiveButton(getString(R.string.text_exit)) { _, _ ->
             requireActivity().finish()
         }
-        alertDialog.setNegativeButton("Cancelar") { dialog, _ -> dialog.dismiss() }
+        alertDialog.setNegativeButton(getString(R.string.text_cancel)) { dialog, _ -> dialog.dismiss() }
             .create()
             .show()
     }
