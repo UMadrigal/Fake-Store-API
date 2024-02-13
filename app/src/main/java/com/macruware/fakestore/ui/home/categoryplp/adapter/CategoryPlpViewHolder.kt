@@ -22,7 +22,7 @@ class CategoryPlpViewHolder(view: View) : ViewHolder(view) {
 
         binding.tvProductPrice.text = product.price.toString()
 
-        binding.root.setOnClickListener {
+        binding.containerCard.setOnClickListener {
             onItemClickListener(product)
         }
 

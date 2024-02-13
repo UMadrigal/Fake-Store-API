@@ -43,8 +43,13 @@ class HomeCategoryPlpFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        homeViewModel.setLambdaFunction({ searchIntoCategory() })
 
         initUI()
+    }
+
+    private fun searchIntoCategory() {
+        Toast.makeText(requireActivity(), "Buscar dentro de categoría", Toast.LENGTH_SHORT).show()
     }
 
     private fun initUI() {
@@ -65,12 +70,11 @@ class HomeCategoryPlpFragment : Fragment() {
     }
 
     private fun configRecycler() {
-        categoryPlpAdapter = CategoryPlpAdapter(onItemClickListener =
-        {product: ProductModel -> goToPdp(product)})
+        categoryPlpAdapter = CategoryPlpAdapter(
+            onItemClickListener = {product: ProductModel -> goToPdp(product)})
 
         binding.recyclerView.apply {
             adapter = categoryPlpAdapter
-            // requireActivity()
             layoutManager = GridLayoutManager(requireContext(),2)
         }
     }

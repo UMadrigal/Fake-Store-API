@@ -23,7 +23,7 @@ class SearchedProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         binding.tvProductPrice.text = product.price.toString()
 
-        binding.root.setOnClickListener {
+        binding.containerCard.setOnClickListener {
             onItemClickListener(product)
         }
 

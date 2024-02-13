@@ -1,10 +1,14 @@
 package com.macruware.fakestore.ui.main
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -49,6 +53,14 @@ class MainActivity : AppCompatActivity() {
     private fun configSearchBar() {
         binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+
+                // Ocultar el teclado
+                val inputMethodManager =
+                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
+
+                // Quitar el foco del EditText
+                binding.etSearch.clearFocus()
 
                 val query = binding.etSearch.text.toString().trim()
                 if (query.isNotEmpty()){

@@ -100,7 +100,8 @@ class HomeProductListFragment : Fragment() {
 
     private fun configRecycler() {
         categoryProductAdapter = CategoryProductAdapter(
-            onItemClickListener =  {category: CategoryProductModel -> goToCategoryPlp(category)}
+            onBtnViewAllClickListener =  { category: CategoryProductModel -> goToCategoryPlp(category)},
+            onProductClickListener = {product: ProductModel -> goToPdp(product)}
         )
         binding.recyclerView.apply {
             adapter = categoryProductAdapter
@@ -113,6 +114,12 @@ class HomeProductListFragment : Fragment() {
             "Ver todo de categoría: ${category.category}, ${category.productList.size} productos.",
             Toast.LENGTH_SHORT).show()
         findNavController().navigate(R.id.action_homeProductListFragment_to_homeCategoryPlpFragment)
+    }
+
+    private fun goToPdp(product: ProductModel){
+        Toast.makeText(requireActivity(),
+            "Ver producto ${product.name}, precio: ${product.price}",
+            Toast.LENGTH_SHORT).show()
     }
 
     private fun onBtnBackPressed(){

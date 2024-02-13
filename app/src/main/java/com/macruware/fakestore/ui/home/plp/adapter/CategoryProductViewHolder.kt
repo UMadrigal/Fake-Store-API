@@ -1,42 +1,49 @@
 package com.macruware.fakestore.ui.home.plp.adapter
 
 import android.view.View
-import android.widget.ImageView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.bumptech.glide.Glide
-import com.macruware.fakestore.R
 import com.macruware.fakestore.databinding.ItemCategoryAndProductBinding
 import com.macruware.fakestore.domain.model.CategoryProductModel
 import com.macruware.fakestore.domain.model.ProductModel
+import com.macruware.fakestore.ui.home.categoryplp.adapter.CategoryPlpAdapter
 
 class CategoryProductViewHolder(view:View): ViewHolder(view) {
     private val binding = ItemCategoryAndProductBinding.bind(view)
+
+    private lateinit var categoryPlpAdapter: CategoryPlpAdapter
+
     private val context = binding.root.context
 
-    fun bind(item: CategoryProductModel, onItemClickListener: (CategoryProductModel) -> Unit){
-        binding.tvCategory.text = item.category
-        val product = item.productList[0]
-        val product2 = item.productList[1]
+    fun bind(
+        item: CategoryProductModel,
+        onBtnViewAllClickListener: (CategoryProductModel) -> Unit,
+        onProductClickListener: (ProductModel) -> Unit)
+    {
+        if (item.productList.size >= 2){
 
-        setProduct(product, binding.imgProduct)
-        setProduct(product2, binding.imgProduct2)
+            binding.tvCategory.text = item.category
+            binding.btnViewAll.setOnClickListener {
+                onBtnViewAllClickListener(item)
+            }
 
-        binding.tvProductName.text = product.name
-        binding.tvProductName2.text = product2.name
-
-        binding.tvProductPrice.text = product.price.toString()
-        binding.tvProductPrice2.text = product2.price.toString()
-
-        binding.btnViewAll.setOnClickListener {
-            onItemClickListener(item)
+            val productList = listOf(
+                item.productList[0],
+                item.productList[1]
+            )
+            configRecycler(onProductClickListener)
+            categoryPlpAdapter.updateList(productList)
         }
-
     }
 
-    private fun setProduct(product: ProductModel, view: ImageView){
-        Glide.with(context)
-            .load(product.image)
-            .placeholder(R.drawable.img_place_holder)
-            .into(view)
+    private fun configRecycler(onProductClickListener: (ProductModel) -> Unit) {
+        categoryPlpAdapter = CategoryPlpAdapter(onItemClickListener = {product: ProductModel -> onProductClickListener(product) })
+
+        binding.rvCategoryProduct.apply {
+            adapter = categoryPlpAdapter
+            // requireActivity()
+            layoutManager = GridLayoutManager(context,2)
+        }
     }
 }

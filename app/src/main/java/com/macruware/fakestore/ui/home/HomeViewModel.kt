@@ -11,7 +11,7 @@ class HomeViewModel @Inject constructor() :ViewModel() {
     private var lambdaSearch: (() -> Unit)? = null
 
     // Se configura la lambdaFunction a ejecutar desde el onCreate del fragment
-    fun setLambdaFunction(function: () -> Unit){
+    fun setLambdaFunction(function: (() -> Unit)?){
         lambdaSearch = function
     }
 
@@ -19,7 +19,6 @@ class HomeViewModel @Inject constructor() :ViewModel() {
     fun setQuery(query: String){
         searchQuery.value = query
         lambdaSearch?.let { it() }
-        lambdaSearch = null
     }
 
 }

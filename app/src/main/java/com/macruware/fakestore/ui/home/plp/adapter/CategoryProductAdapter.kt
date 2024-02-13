@@ -5,11 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.macruware.fakestore.R
 import com.macruware.fakestore.domain.model.CategoryProductModel
+import com.macruware.fakestore.domain.model.ProductModel
 
 class CategoryProductAdapter(
     private var categoryProductList: List<CategoryProductModel> = emptyList(),
-    private var onItemClickListener: (CategoryProductModel) -> Unit
+    private var onBtnViewAllClickListener: (CategoryProductModel) -> Unit,
+    private var onProductClickListener: (ProductModel) -> Unit
 ) : RecyclerView.Adapter<CategoryProductViewHolder>() {
+
     fun updateList(list: List<CategoryProductModel>){
         categoryProductList = list
         notifyDataSetChanged()
@@ -23,7 +26,7 @@ class CategoryProductAdapter(
 
     override fun onBindViewHolder(holder: CategoryProductViewHolder, position: Int) {
         val item = categoryProductList[position]
-        holder.bind(item, onItemClickListener)
+        holder.bind(item, onBtnViewAllClickListener, onProductClickListener)
     }
 
     override fun getItemCount(): Int = categoryProductList.size

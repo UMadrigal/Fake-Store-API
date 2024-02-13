@@ -43,7 +43,7 @@ class SearchedProductFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        homeViewModel.setLambdaFunction { Toast.makeText(requireActivity(), "lambda function de search", Toast.LENGTH_SHORT).show() }
+        homeViewModel.setLambdaFunction { reSearchQuery() }
 
         initUI()
     }
@@ -78,6 +78,10 @@ class SearchedProductFragment : Fragment() {
         Toast.makeText(requireActivity(),
             "Ver producto ${product.name}, precio: ${product.price}",
             Toast.LENGTH_SHORT).show()
+    }
+
+    private fun reSearchQuery(){
+        Toast.makeText(requireActivity(), "reSearchQuery", Toast.LENGTH_SHORT).show()
     }
 
     private fun onBtnBackPressed(){
