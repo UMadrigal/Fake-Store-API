@@ -10,6 +10,7 @@ class CategoryNameAdapter(private var categoryNameList: List<CategoryNameModel> 
 
     fun updateList(list: List<CategoryNameModel>){
         categoryNameList = list
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryNameViewHolder {

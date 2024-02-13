@@ -41,10 +41,16 @@ android {
 dependencies {
 
     val navigationVersion = "2.7.6"
+    val glideVersion = "4.12.0"
 
     // Fragment Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
+
+    // Glide
+    implementation("com.github.bumptech.glide:glide:$glideVersion")
+    annotationProcessor("com.github.bumptech.glide:compiler:$glideVersion")
+
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")

@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavView : BottomNavigationView
     private lateinit var navController: NavController
 
-    private var categoryNameAdapter = CategoryNameAdapter()
+    private lateinit var categoryNameAdapter: CategoryNameAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun configCategoriesRecycler() {
+        categoryNameAdapter = CategoryNameAdapter()
         binding.rvCategories.apply {
             adapter = categoryNameAdapter
             layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
