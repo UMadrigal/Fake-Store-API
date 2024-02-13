@@ -35,4 +35,5 @@
     <string name="text_alert_on_exit_app">¿Deseas salir de la aplicación?</string>
     <string name="text_exit">Salir</string>
     <string name="text_cancel">Cancelar</string>
+    <string name="text_hint_search">Search...</string>
 </resources>

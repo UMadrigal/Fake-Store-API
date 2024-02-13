@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeProductListFragment_to_homeCategoryPlpFragment"
             app:destination="@id/homeCategoryPlpFragment" />
+        <action
+            android:id="@+id/action_homeProductListFragment_to_searchedProductFragment"
+            app:destination="@id/searchedProductFragment" />
     </fragment>
     <fragment
         android:id="@+id/homeCategoryPlpFragment"
@@ -27,5 +30,9 @@
         android:id="@+id/searchedProductFragment"
         android:name="com.macruware.fakestore.ui.home.searchedplp.SearchedProductFragment"
         android:label="fragment_searched_product"
-        tools:layout="@layout/fragment_searched_product" />
+        tools:layout="@layout/fragment_searched_product" >
+        <action
+            android:id="@+id/action_searchedProductFragment_to_homeProductListFragment"
+            app:destination="@id/homeProductListFragment" />
+    </fragment>
 </navigation>

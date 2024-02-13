@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="start"
-    tools:context=".ui.main.MainActivity"
-    tools:openDrawer="start">
+    tools:context=".ui.main.MainActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -73,7 +72,8 @@
                         android:background="@android:color/transparent"
                         android:drawableStart="@drawable/ic_search"
                         android:drawablePadding="8dp"
-                        android:hint="Search..."
+                        android:imeOptions="actionSearch"
+                        android:hint="@string/text_hint_search"
                         android:textColor="@color/gray" />
 
                 </androidx.cardview.widget.CardView>

@@ -3,8 +3,10 @@ package com.macruware.fakestore.ui.main
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -13,11 +15,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.macruware.fakestore.R
 import com.macruware.fakestore.databinding.ActivityMainBinding
 import com.macruware.fakestore.domain.model.CategoryNameModel
+import com.macruware.fakestore.ui.home.HomeViewModel
 import com.macruware.fakestore.ui.main.adapter.CategoryNameAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var homeViewModel: HomeViewModel
 
     private lateinit var bottomNavView : BottomNavigationView
     private lateinit var navController: NavController
@@ -28,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
         initUI()
     }
@@ -35,8 +42,23 @@ class MainActivity : AppCompatActivity() {
     private fun initUI() {
         configMainDrawer()
         configBottomNav()
-
+        configSearchBar()
         apiStateSuccess()
+    }
+
+    private fun configSearchBar() {
+        binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+
+                val query = binding.etSearch.text.toString().trim()
+                if (query.isNotEmpty()){
+                    homeViewModel.setQuery(query)
+                }
+
+                return@setOnEditorActionListener true
+            }
+            false
+        }
     }
 
     private fun apiStateSuccess(){

@@ -5,20 +5,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.GridLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.macruware.fakestore.R
 import com.macruware.fakestore.databinding.FragmentHomeCategoryPlpBinding
-import com.macruware.fakestore.domain.model.CategoryProductModel
 import com.macruware.fakestore.domain.model.ProductModel
+import com.macruware.fakestore.ui.home.HomeViewModel
 import com.macruware.fakestore.ui.home.categoryplp.adapter.CategoryPlpAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeCategoryPlpFragment : Fragment() {
     private var _binding: FragmentHomeCategoryPlpBinding? = null
     private val binding get() = _binding!!
+    private lateinit var homeViewModel: HomeViewModel
 
     private val callback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -33,12 +36,14 @@ class HomeCategoryPlpFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeCategoryPlpBinding.inflate(layoutInflater, container, false)
+        homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         initUI()
     }
 

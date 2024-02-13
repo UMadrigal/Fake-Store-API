@@ -8,17 +8,22 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.macruware.fakestore.R
 import com.macruware.fakestore.databinding.FragmentHomeProductListBinding
 import com.macruware.fakestore.domain.model.CategoryProductModel
 import com.macruware.fakestore.domain.model.ProductModel
+import com.macruware.fakestore.ui.home.HomeViewModel
 import com.macruware.fakestore.ui.home.plp.adapter.CategoryProductAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeProductListFragment : Fragment() {
     private var _binding: FragmentHomeProductListBinding? = null
     private val binding get() = _binding!!
+    private lateinit var homeViewModel: HomeViewModel
 
     private val callback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -33,13 +38,20 @@ class HomeProductListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeProductListBinding.inflate(layoutInflater,container,false)
+        homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        homeViewModel.setLambdaFunction { goToSearched() }
+
         initUI()
+    }
+
+    private fun goToSearched(){
+        findNavController().navigate(R.id.action_homeProductListFragment_to_searchedProductFragment)
     }
 
     private fun initUI() {
