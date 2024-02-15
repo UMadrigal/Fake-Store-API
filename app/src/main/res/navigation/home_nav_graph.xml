@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeProductListFragment_to_searchedProductFragment"
             app:destination="@id/searchedProductFragment" />
+        <action
+            android:id="@+id/action_homeProductListFragment_to_homeProductDetailFragment"
+            app:destination="@id/homeProductDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/homeCategoryPlpFragment"
@@ -25,6 +28,9 @@
         <action
             android:id="@+id/action_homeCategoryPlpFragment_to_homeProductListFragment"
             app:destination="@id/homeProductListFragment" />
+        <action
+            android:id="@+id/action_homeCategoryPlpFragment_to_homeProductDetailFragment"
+            app:destination="@id/homeProductDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchedProductFragment"
@@ -34,5 +40,13 @@
         <action
             android:id="@+id/action_searchedProductFragment_to_homeProductListFragment"
             app:destination="@id/homeProductListFragment" />
+        <action
+            android:id="@+id/action_searchedProductFragment_to_homeProductDetailFragment"
+            app:destination="@id/homeProductDetailFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/homeProductDetailFragment"
+        android:name="com.macruware.fakestore.ui.home.productdetail.HomeProductDetailFragment"
+        android:label="fragment_home_product_detail"
+        tools:layout="@layout/fragment_home_product_detail" />
 </navigation>

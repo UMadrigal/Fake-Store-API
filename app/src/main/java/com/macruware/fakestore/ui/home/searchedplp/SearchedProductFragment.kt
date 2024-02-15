@@ -75,6 +75,9 @@ class SearchedProductFragment : Fragment() {
     }
 
     private fun goToPdp(product: ProductModel){
+
+        findNavController().navigate(R.id.action_searchedProductFragment_to_homeProductDetailFragment)
+
         Toast.makeText(requireActivity(),
             "Ver producto ${product.name}, precio: ${product.price}",
             Toast.LENGTH_SHORT).show()
