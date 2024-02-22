@@ -12,9 +12,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.macruware.fakestore.R
 import com.macruware.fakestore.databinding.FragmentHomeCategoryPlpBinding
+import com.macruware.fakestore.domain.model.HomeFragmentProvider
 import com.macruware.fakestore.domain.model.ProductModel
 import com.macruware.fakestore.ui.home.HomeViewModel
 import com.macruware.fakestore.ui.home.categoryplp.adapter.CategoryPlpAdapter
+import com.macruware.fakestore.ui.main.MainUiState
+import com.macruware.fakestore.ui.main.MainUiState.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -44,6 +47,7 @@ class HomeCategoryPlpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         homeViewModel.setLambdaFunction({ searchIntoCategory() })
+        homeViewModel.setMainUiState(HomeCategoryPlp)
 
         initUI()
     }
@@ -60,11 +64,11 @@ class HomeCategoryPlpFragment : Fragment() {
 
     private fun apiStateSuccess() {
         val electronicsProducts = listOf(
-            ProductModel("Electronic Product 1", 49.99, "Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10),
-            ProductModel("Electronic Product 2", 99.99, "Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8),
-            ProductModel("Electronic Product 3", 29.99, "Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15),
-            ProductModel("Electronic Product 4", 79.99, "Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12),
-            ProductModel("Electronic Product 5", 59.99, "Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 20))
+            ProductModel("Electronic Product 1", 49.99, "jewelery","Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10),
+            ProductModel("Electronic Product 2", 99.99, "jewelery","Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8),
+            ProductModel("Electronic Product 3", 29.99, "jewelery","Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15),
+            ProductModel("Electronic Product 4", 79.99, "jewelery","Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12),
+            ProductModel("Electronic Product 5", 59.99, "jewelery","Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 20))
 
         categoryPlpAdapter.updateList(electronicsProducts)
     }
@@ -80,11 +84,20 @@ class HomeCategoryPlpFragment : Fragment() {
     }
 
     private fun goToPdp(product: ProductModel){
-        findNavController().navigate(R.id.action_homeCategoryPlpFragment_to_homeProductDetailFragment)
+        findNavController().navigate(
+            HomeCategoryPlpFragmentDirections
+                .actionHomeCategoryPlpFragmentToHomeProductDetailFragment(
+                    HomeFragmentProvider.HomeCategoryPlpFragment
+                )
+        )
 
-        Toast.makeText(requireActivity(),
-            "Ver producto ${product.name}, precio: ${product.price}",
-            Toast.LENGTH_SHORT).show()
+        homeViewModel.setCurrentProduct(product)
+
+        //findNavController().navigate(R.id.action_homeCategoryPlpFragment_to_homeProductDetailFragment)
+
+//        Toast.makeText(requireActivity(),
+//            "Ver producto ${product.name}, precio: ${product.price}",
+//            Toast.LENGTH_SHORT).show()
     }
     
     private fun onBtnBackPressed(){

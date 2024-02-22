@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="16dp"
+    android:layout_marginTop="24dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -16,19 +16,21 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
-            android:id="@+id/imageProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/img_profile_picture"/>
+            android:id="@+id/imgProfilePicture"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/img_profile_picture_place_holder"/>
 
         <TextView
+            android:id="@+id/tvPersonName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="8dp"
             android:maxLines="3"
             android:ellipsize="end"
-            android:text="Person Name"
+            tools:text="Person Name"
             style="@style/SubTitleText"/>
 
         <LinearLayout
@@ -48,6 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="4.8"
+                    android:textSize="14sp"
                     style="@style/SubTitleText"/>
 
                 <TextView
@@ -69,9 +72,8 @@
 
     <TextView
         android:id="@+id/tvReview"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:maxLines="4"
         android:ellipsize="end"
         tools:text="Review Review Review Review Review Review Review Review Review Review Review Review Review Review Review Review Review Review Review Review Review Review Review "

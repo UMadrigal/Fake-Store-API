@@ -6,4 +6,4 @@
     android:layout_height="match_parent"
     android:paddingHorizontal="16dp"
     tools:listitem="@layout/item_searched_product"
-    tools:context=".ui.home.searchedplp.SearchedProductFragment"/>
+    tools:context=".ui.home.searchedplp.HomeSearchedProductFragment"/>

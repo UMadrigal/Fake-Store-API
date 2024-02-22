@@ -10,7 +10,11 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.GravityCompat
+import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -20,8 +24,10 @@ import com.macruware.fakestore.R
 import com.macruware.fakestore.databinding.ActivityMainBinding
 import com.macruware.fakestore.domain.model.CategoryNameModel
 import com.macruware.fakestore.ui.home.HomeViewModel
+import com.macruware.fakestore.ui.main.MainUiState.*
 import com.macruware.fakestore.ui.main.adapter.CategoryNameAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -47,7 +53,66 @@ class MainActivity : AppCompatActivity() {
         configMainDrawer()
         configBottomNav()
         configSearchBar()
+        configUiState()
+        configListeners()
+
         apiStateSuccess()
+    }
+
+    private fun configListeners() {
+        binding.btnBack.setOnClickListener {
+            homeViewModel.onBackPressed.value?.let { it() }
+        }
+    }
+
+    private fun configUiState() {
+        // get state from viewModel
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                homeViewModel.mainUiState.collect{
+                    when(it){
+                        HomeProductList -> uiStateHomeProductList()
+                        HomeCategoryPlp -> uiStateHomeCategoryPlp()
+                        HomeSearchedProduct -> uiStateHomeSearchedProduct()
+                        HomeProductDetail -> uiStateHomeProductDetail()
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun uiStateHomeProductList() {
+        binding.btnMenu.isVisible = true
+        binding.btnBack.isVisible = false
+        binding.searchContainer.isVisible = true
+        binding.etSearch.text.clear()
+        binding.tvTitle.isVisible = false
+        binding.btnNotifications.isVisible = true
+    }
+
+    private fun uiStateHomeCategoryPlp() {
+        binding.btnMenu.isVisible = true
+        binding.btnBack.isVisible = false
+        binding.searchContainer.isVisible = true
+        binding.tvTitle.isVisible = false
+        binding.btnNotifications.isVisible = true
+    }
+
+    private fun uiStateHomeSearchedProduct() {
+        binding.btnMenu.isVisible = false
+        binding.btnBack.isVisible = true
+        binding.searchContainer.isVisible = true
+        binding.tvTitle.isVisible = false
+        binding.btnNotifications.isVisible = false
+    }
+
+    private fun uiStateHomeProductDetail() {
+        binding.btnMenu.isVisible = false
+        binding.btnBack.isVisible = true
+        binding.searchContainer.isVisible = false
+        binding.tvTitle.isVisible = true
+        binding.btnNotifications.isVisible = false
     }
 
     private fun configSearchBar() {

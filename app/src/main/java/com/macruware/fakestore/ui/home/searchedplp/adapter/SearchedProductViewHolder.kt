@@ -13,18 +13,17 @@ class SearchedProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val context = binding.root.context
 
     fun bind(item: ProductModel, onItemClickListener: (ProductModel) -> Unit) {
-        val product = item
 
-        setProduct(product, binding.imgProduct)
+        setProduct(item, binding.imgProduct)
 
-        binding.tvProductName.text = product.name
+        binding.tvProductName.text = item.name
 
-        binding.tvProductDescription.text = product.description
+        binding.tvProductDescription.text = item.description
 
-        binding.tvProductPrice.text = product.price.toString()
+        binding.tvProductPrice.text = item.price.toString()
 
         binding.containerCard.setOnClickListener {
-            onItemClickListener(product)
+            onItemClickListener(item)
         }
 
     }

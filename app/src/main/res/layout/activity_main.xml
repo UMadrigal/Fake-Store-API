@@ -28,30 +28,40 @@
                 android:elevation="4dp"
                 android:paddingHorizontal="16dp">
 
-                <ImageButton
-                    android:id="@+id/btnMenu"
-                    android:layout_width="@dimen/common_size_header_button"
-                    android:layout_height="@dimen/common_size_header_button"
-                    android:background="@android:color/transparent"
-                    android:foreground="?selectableItemBackground"
-                    android:src="@drawable/ic_btn_side_menu"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/leftButtonsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <ImageButton
-                    android:id="@+id/btnBack"
-                    android:layout_width="@dimen/common_size_header_button"
-                    android:layout_height="@dimen/common_size_header_button"
-                    android:background="@android:color/transparent"
-                    android:foreground="?selectableItemBackground"
-                    android:src="@drawable/ic_btn_back"
-                    android:visibility="invisible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <ImageButton
+                        android:id="@+id/btnMenu"
+                        android:layout_width="@dimen/common_size_header_button"
+                        android:layout_height="@dimen/common_size_header_button"
+                        android:background="@android:color/transparent"
+                        android:foreground="?selectableItemBackground"
+                        android:src="@drawable/ic_btn_side_menu"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageButton
+                        android:id="@+id/btnBack"
+                        android:layout_width="@dimen/common_size_header_button"
+                        android:layout_height="@dimen/common_size_header_button"
+                        android:background="@android:color/transparent"
+                        android:foreground="?selectableItemBackground"
+                        android:src="@drawable/ic_btn_back"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/searchContainer"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/common_size_header_button"
                     android:layout_marginHorizontal="16dp"
@@ -60,7 +70,7 @@
                     app:cardElevation="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/btnNotifications"
-                    app:layout_constraintStart_toEndOf="@+id/btnBack"
+                    app:layout_constraintStart_toEndOf="@id/leftButtonsContainer"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <EditText
