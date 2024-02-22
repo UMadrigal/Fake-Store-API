@@ -65,19 +65,15 @@ class HomeProductDetailFragment : Fragment() {
     }
 
     private fun configProduct() {
-        // StateFlow
-//        lifecycleScope.launch {
-//            repeatOnLifecycle(Lifecycle.State.STARTED){
-//                homeViewModel.currentProduct.collect{
-//                    currentProduct = it
-//                }
-//            }
-//        }
+
         currentProduct = homeViewModel.currentProduct.value
 
-        // LiveData
-        homeViewModel.currentProduct.observe(requireActivity()){
-            currentProduct = it
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                homeViewModel.currentProduct.collect{
+                    currentProduct = it
+                }
+            }
         }
 
         if (currentProduct != null){

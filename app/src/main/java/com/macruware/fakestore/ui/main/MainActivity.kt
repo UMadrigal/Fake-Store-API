@@ -24,6 +24,7 @@ import com.macruware.fakestore.R
 import com.macruware.fakestore.databinding.ActivityMainBinding
 import com.macruware.fakestore.domain.model.CategoryNameModel
 import com.macruware.fakestore.ui.home.HomeViewModel
+import com.macruware.fakestore.ui.main.MainApiState.*
 import com.macruware.fakestore.ui.main.MainUiState.*
 import com.macruware.fakestore.ui.main.adapter.CategoryNameAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,20 +51,45 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initUI() {
+        homeViewModel.getCategories()
+
         configMainDrawer()
         configBottomNav()
         configSearchBar()
         configUiState()
         configListeners()
 
-        apiStateSuccess()
+        configApiState()
     }
 
-    private fun configListeners() {
-        binding.btnBack.setOnClickListener {
-            homeViewModel.onBackPressed.value?.let { it() }
+    private fun configApiState() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                homeViewModel.mainApiState.collect{
+                    when(it){
+                        is Loading -> apiStateLoading()
+                        is Success -> apiStateSuccess(it)
+                        is Error -> apiStateError(it)
+                    }
+                }
+            }
         }
     }
+
+    private fun apiStateLoading() {
+
+    }
+
+    private fun apiStateSuccess(state: Success){
+
+        categoryNameAdapter.updateList(state.categoryNameList)
+    }
+
+    private fun apiStateError(state: Error){
+        Toast.makeText(this, state.error, Toast.LENGTH_SHORT).show()
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private fun configUiState() {
         // get state from viewModel
@@ -115,6 +141,27 @@ class MainActivity : AppCompatActivity() {
         binding.btnNotifications.isVisible = false
     }
 
+    private fun configCategoriesRecycler() {
+        categoryNameAdapter = CategoryNameAdapter()
+        binding.rvCategories.apply {
+            adapter = categoryNameAdapter
+            layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
+        }
+    }
+
+    private fun configListeners() {
+        binding.btnBack.setOnClickListener {
+            homeViewModel.onBackPressed.value?.let { it() }
+        }
+    }
+
+    private fun configBottomNav() {
+        bottomNavView = binding.bottomNavView
+        val navHost = supportFragmentManager.findFragmentById(R.id.mainFragmentContainerView) as NavHostFragment
+        navController = navHost.navController
+        bottomNavView.setupWithNavController(navController)
+    }
+
     private fun configSearchBar() {
         binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -136,32 +183,6 @@ class MainActivity : AppCompatActivity() {
             }
             false
         }
-    }
-
-    private fun apiStateSuccess(){
-        val categoryNameList = listOf(
-            CategoryNameModel("electronics"),
-            CategoryNameModel("jewelery"),
-            CategoryNameModel("men's clothing"),
-            CategoryNameModel("women's clothing")
-        )
-
-        categoryNameAdapter.updateList(categoryNameList)
-    }
-
-    private fun configCategoriesRecycler() {
-        categoryNameAdapter = CategoryNameAdapter()
-        binding.rvCategories.apply {
-            adapter = categoryNameAdapter
-            layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
-        }
-    }
-
-    private fun configBottomNav() {
-        bottomNavView = binding.bottomNavView
-        val navHost = supportFragmentManager.findFragmentById(R.id.mainFragmentContainerView) as NavHostFragment
-        navController = navHost.navController
-        bottomNavView.setupWithNavController(navController)
     }
 
     private fun configMainDrawer() {
@@ -202,4 +223,5 @@ class MainActivity : AppCompatActivity() {
 
         configCategoriesRecycler()
     }
+////////////////////////////////////////////////////////////////////////////////////////////////////
 }

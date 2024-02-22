@@ -1,6 +1,7 @@
 package com.macruware.fakestore.ui.home.plp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +9,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.macruware.fakestore.R
@@ -16,11 +20,13 @@ import com.macruware.fakestore.databinding.FragmentHomeProductListBinding
 import com.macruware.fakestore.domain.model.CategoryProductModel
 import com.macruware.fakestore.domain.model.HomeFragmentProvider
 import com.macruware.fakestore.domain.model.ProductModel
+import com.macruware.fakestore.ui.home.HomeApiState
 import com.macruware.fakestore.ui.home.HomeViewModel
 import com.macruware.fakestore.ui.home.plp.adapter.CategoryProductAdapter
 import com.macruware.fakestore.ui.main.MainUiState
 import com.macruware.fakestore.ui.main.MainUiState.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeProductListFragment : Fragment() {
@@ -60,46 +66,33 @@ class HomeProductListFragment : Fragment() {
 
     private fun initUI() {
         configRecycler()
-
-        apiStateSuccess()
+        configHomeApiState()
     }
 
-    private fun apiStateSuccess() {
-        val electronicsProducts = listOf(
-            ProductModel("Electronic Product 1", 49.99, "jewelery","Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10),
-            ProductModel("Electronic Product 2", 99.99, "jewelery","Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8),
-            ProductModel("Electronic Product 3", 29.99, "jewelery","Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15),
-            ProductModel("Electronic Product 4", 79.99, "jewelery","Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12),
-            ProductModel("Electronic Product 5", 59.99, "jewelery","Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 20))
+    private fun configHomeApiState() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                homeViewModel.homeApiState.collect{
+                    when(it){
+                        is HomeApiState.Loading -> homeApiStateLoading()
+                        is HomeApiState.Success -> homeApiStateSuccess(it)
+                        is HomeApiState.Error -> homeApiStateError(it)
+                    }
+                }
+            }
+        }
+    }
 
-        val jewelryProducts = listOf(
-            ProductModel("Jewelry Product 1", 149.99,"jewelery", "Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.7, 5),
-            ProductModel("Jewelry Product 2", 199.99,"jewelery", "Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.1, 7),
-            ProductModel("Jewelry Product 3", 99.99, "jewelery","Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.9, 8),
-            ProductModel("Jewelry Product 4", 179.99,"jewelery", "Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.4, 6),
-            ProductModel("Jewelry Product 5", 129.99,"jewelery", "Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.8, 10))
+    private fun homeApiStateLoading() {
 
-        val mensClothingProducts = listOf(
-            ProductModel("Men's Clothing Product 1", 34.99, "jewelery","Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.6, 15),
-            ProductModel("Men's Clothing Product 2", 44.99, "jewelery","Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.7, 20),
-            ProductModel("Men's Clothing Product 3", 24.99, "jewelery","Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 18),
-            ProductModel("Men's Clothing Product 4", 54.99, "jewelery","Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 12),
-            ProductModel("Men's Clothing Product 5", 39.99, "jewelery","Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 22))
+    }
 
-        val womensClothingProducts = listOf(
-            ProductModel("Women's Clothing Product 1", 29.99, "jewelery","Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 8),
-            ProductModel("Women's Clothing Product 1", 29.99, "jewelery","Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 8),
-            ProductModel("Women's Clothing Product 1", 29.99, "jewelery","Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 8),
-            ProductModel("Women's Clothing Product 1", 29.99, "jewelery","Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 8))
+    private fun homeApiStateSuccess(state: HomeApiState.Success){
+        categoryProductAdapter.updateList(state.categoryWithProductList)
+    }
 
-        val categoryProductList = listOf(
-            CategoryProductModel("electronics", electronicsProducts),
-            CategoryProductModel("jewelery", jewelryProducts),
-            CategoryProductModel("men's clothing", mensClothingProducts),
-            CategoryProductModel("women's clothing", womensClothingProducts))
-
-        categoryProductAdapter.updateList(categoryProductList)
-
+    private fun homeApiStateError(state: HomeApiState.Error){
+        Log.e("HomeApiState", state.error)
     }
 
     private fun configRecycler() {
@@ -114,9 +107,7 @@ class HomeProductListFragment : Fragment() {
     }
 
     private fun goToCategoryPlp(category: CategoryProductModel){
-        Toast.makeText(requireActivity(),
-            "Ver todo de categoría: ${category.category}, ${category.productList.size} productos.",
-            Toast.LENGTH_SHORT).show()
+        homeViewModel.setCurrentCategory(category.category)
         findNavController().navigate(R.id.action_homeProductListFragment_to_homeCategoryPlpFragment)
     }
 
@@ -129,11 +120,6 @@ class HomeProductListFragment : Fragment() {
 
         homeViewModel.setCurrentProduct(product)
 
-        //findNavController().navigate(R.id.action_homeProductListFragment_to_homeProductDetailFragment)
-
-//        Toast.makeText(requireActivity(),
-//            "Ver producto ${product.name}, precio: ${product.price}",
-//            Toast.LENGTH_SHORT).show()
     }
 
     private fun onBtnBackPressed(){

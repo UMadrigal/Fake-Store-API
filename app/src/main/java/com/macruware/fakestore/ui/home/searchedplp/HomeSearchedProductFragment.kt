@@ -87,15 +87,11 @@ class HomeSearchedProductFragment : Fragment() {
 
         homeViewModel.setCurrentProduct(product)
 
-        //findNavController().navigate(R.id.action_searchedProductFragment_to_homeProductDetailFragment)
-
-//        Toast.makeText(requireActivity(),
-//            "Ver producto ${product.name}, precio: ${product.price}",
-//            Toast.LENGTH_SHORT).show()
     }
 
     private fun reSearchQuery(){
         Toast.makeText(requireActivity(), "reSearchQuery", Toast.LENGTH_SHORT).show()
+        homeViewModel.reSearchQuery()
     }
 
     private fun onBtnBackPressed(){
