@@ -36,26 +36,58 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     }
     ////////////////////////////////////////
 
-    // llamar api get all products /products
+    private var _productList = MutableStateFlow<List<ProductModel>>(emptyList())
 
-    // Filtrar query en lista de productos
+    fun getAllProducts(): List<ProductModel>{
+        // llamar api get all products /products
+        // si no es null
+        val response = listOf<ProductModel>(
+            ProductModel("Electronic Product 1", 49.99,"Jewelry", "Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10),
+            ProductModel("Electronic Product 2", 99.99,"Jewelry", "Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8),
+            ProductModel("Electronic Product 3", 29.99,"Jewelry", "Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15),
+            ProductModel("Electronic Product 4", 79.99,"Jewelry", "Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12),
+            ProductModel("Electronic Product 5", 59.99,"Jewelry", "Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 20),
+            ProductModel("Electronic Product 1", 49.99,"Jewelry", "Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10),
+            ProductModel("Electronic Product 2", 99.99,"Jewelry", "Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8),
+            ProductModel("Electronic Product 3", 29.99,"Jewelry", "Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15),
+            ProductModel("Electronic Product 4", 79.99,"Jewelry", "Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12),
+            ProductModel("Electronic Product 5", 59.99,"Jewelry", "Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 20),
+            ProductModel("Electronic Product 1", 49.99,"Jewelry", "Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10),
+            ProductModel("Electronic Product 2", 99.99,"Jewelry", "Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8),
+            ProductModel("Electronic Product 3", 29.99,"Jewelry", "Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15),
+            ProductModel("Electronic Product 4", 79.99,"Jewelry", "Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12),
+            ProductModel("Electronic Product 5", 59.99,"Jewelry", "Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 20),
+            ProductModel("Electronic Product 1", 49.99,"Jewelry", "Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10),
+            ProductModel("Electronic Product 2", 99.99,"Jewelry", "Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8),
+            ProductModel("Electronic Product 3", 29.99,"Jewelry", "Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15),
+            ProductModel("Electronic Product 4", 79.99,"Jewelry", "Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12),
+            ProductModel("Electronic Product 5", 59.99,"Jewelry", "Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 20)
+        )
 
-    // devolver a HSPF la lista filtrada
+        // Guardar lista de todos los productos
+        _productList.value = response
+
+        // Filtrar query en lista de productos
+        return filterByQuery()
+    }
 
     // Función llamada desde searchedFragment a través de lambda
-    fun reSearchQuery(){
+    fun reSearchQuery(): List<ProductModel> {
         // Filtrar query en lista de productos
+        return filterByQuery()
     }
 
     // Función llamada desde categoryFragment a través de lambda
     fun searchIntoCategory(){
         // obtener lista de productos de la categoría
-//        val productListOfCurrentCategory = getProductListOfCurrentCategory()
+        _productList.value = getProductListOfCurrentCategory()
+
         // Filtrar query en lista de productos
+        _productListFromCategory.value = filterByQuery()
     }
 
-    private fun filterByQuery(list: List<ProductModel>){
-
+    private fun filterByQuery(): List<ProductModel>{
+        return _productList.value.filter { it.name.contains(searchQuery.value.toString(), ignoreCase = true) }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,11 +161,20 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
             // si no es null
             val response = listOf(
-                ProductModel("Electronic Product 1", 49.99, "jewelery","Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10),
-                ProductModel("Electronic Product 2", 99.99, "jewelery","Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8),
-                ProductModel("Electronic Product 3", 29.99, "jewelery","Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15),
-                ProductModel("Electronic Product 4", 79.99, "jewelery","Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12),
-                ProductModel("Electronic Product 5", 59.99, "jewelery","Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 20))
+                ProductModel("Electronic Product 1", 49.99,"Jewelry", "Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10),
+                ProductModel("Electronic Product 2", 99.99,"Jewelry", "Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8),
+                ProductModel("Electronic Product 3", 29.99,"Jewelry", "Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15),
+                ProductModel("Electronic Product 4", 79.99,"Jewelry", "Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12),
+                ProductModel("Electronic Product 5", 59.99,"Jewelry", "Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 20),
+                ProductModel("Electronic Product 1", 49.99,"Jewelry", "Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10),
+                ProductModel("Electronic Product 2", 99.99,"Jewelry", "Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8),
+                ProductModel("Electronic Product 3", 29.99,"Jewelry", "Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15),
+                ProductModel("Electronic Product 4", 79.99,"Jewelry", "Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12),
+                ProductModel("Electronic Product 5", 59.99,"Jewelry", "Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 20),
+                ProductModel("Electronic Product 1", 49.99,"Jewelry", "Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10),
+                ProductModel("Electronic Product 2", 99.99,"Jewelry", "Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8),
+                ProductModel("Electronic Product 3", 29.99,"Jewelry", "Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15),
+                ProductModel("Electronic Product 4", 79.99,"Jewelry", "Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12))
 
             val categoryProductModel = CategoryProductModel(category.name, response)
             _categoryWithProductList.value.add(categoryProductModel)
@@ -146,12 +187,17 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Bloque que guarda la categoría seleccionada para ver todos los productos
     private var _currentCategory = MutableStateFlow("")
+
+    private var _productListFromCategory = MutableStateFlow<List<ProductModel>>(emptyList())
+    val productListFromCategory: StateFlow<List<ProductModel>> get() = _productListFromCategory
+
     fun setCurrentCategory(newCategory: String){
         _currentCategory.value = newCategory
+        _productListFromCategory.value = getProductListOfCurrentCategory()
     }
 
     // CategoryPlp pide la lista de productos de la categoría seleccionada
-    fun getProductListOfCurrentCategory(): List<ProductModel>{
+    private fun getProductListOfCurrentCategory(): List<ProductModel>{
         for (categoryWithProduct in _categoryWithProductList.value){
             if (categoryWithProduct.category == _currentCategory.value){
                 return categoryWithProduct.productList

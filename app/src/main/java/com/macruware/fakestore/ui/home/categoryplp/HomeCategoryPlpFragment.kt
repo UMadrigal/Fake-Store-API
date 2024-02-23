@@ -7,7 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.macruware.fakestore.R
@@ -19,6 +22,7 @@ import com.macruware.fakestore.ui.home.categoryplp.adapter.CategoryPlpAdapter
 import com.macruware.fakestore.ui.main.MainUiState
 import com.macruware.fakestore.ui.main.MainUiState.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeCategoryPlpFragment : Fragment() {
@@ -47,13 +51,13 @@ class HomeCategoryPlpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         homeViewModel.setLambdaFunction{ searchIntoCategory() }
+        homeViewModel.setOnBackPressedFunction { onBtnBackPressed() }
         homeViewModel.setMainUiState(HomeCategoryPlp)
 
         initUI()
     }
 
     private fun searchIntoCategory() {
-        Toast.makeText(requireActivity(), "Buscar dentro de categoría", Toast.LENGTH_SHORT).show()
         homeViewModel.searchIntoCategory()
     }
 
@@ -63,8 +67,15 @@ class HomeCategoryPlpFragment : Fragment() {
     }
 
     private fun fetchData(){
-        val productList = homeViewModel.getProductListOfCurrentCategory()
-        categoryPlpAdapter.updateList(productList)
+        categoryPlpAdapter.updateList(homeViewModel.productListFromCategory.value)
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                homeViewModel.productListFromCategory.collect{
+                    categoryPlpAdapter.updateList(it)
+                }
+            }
+        }
     }
 
     private fun configRecycler() {

@@ -53,18 +53,6 @@ class HomeSearchedProductFragment : Fragment() {
 
     private fun initUI() {
         configRecycler()
-        apiStateSuccess()
-    }
-
-    private fun apiStateSuccess() {
-        val electronicsProducts = listOf(
-            ProductModel("Electronic Product 1", 49.99, "jewelery","Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10),
-            ProductModel("Electronic Product 2", 99.99, "jewelery","Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8),
-            ProductModel("Electronic Product 3", 29.99, "jewelery","Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15),
-            ProductModel("Electronic Product 4", 79.99, "jewelery","Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12),
-            ProductModel("Electronic Product 5", 59.99, "jewelery","Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 20))
-
-        searchedProductAdapter.updateList(electronicsProducts)
     }
 
     private fun configRecycler() {
@@ -75,6 +63,8 @@ class HomeSearchedProductFragment : Fragment() {
             adapter = searchedProductAdapter
             layoutManager = LinearLayoutManager(requireActivity())
         }
+
+        searchedProductAdapter.updateList(homeViewModel.getAllProducts())
     }
 
     private fun goToPdp(product: ProductModel){
@@ -90,8 +80,8 @@ class HomeSearchedProductFragment : Fragment() {
     }
 
     private fun reSearchQuery(){
-        Toast.makeText(requireActivity(), "reSearchQuery", Toast.LENGTH_SHORT).show()
-        homeViewModel.reSearchQuery()
+//        Toast.makeText(requireActivity(), "reSearchQuery", Toast.LENGTH_SHORT).show()
+        searchedProductAdapter.updateList(homeViewModel.reSearchQuery())
     }
 
     private fun onBtnBackPressed(){

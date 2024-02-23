@@ -11,6 +11,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -110,6 +111,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun uiStateHomeProductList() {
         binding.btnMenu.isVisible = true
+        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         binding.btnBack.isVisible = false
         binding.searchContainer.isVisible = true
         binding.etSearch.text.clear()
@@ -119,14 +121,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun uiStateHomeCategoryPlp() {
         binding.btnMenu.isVisible = true
-        binding.btnBack.isVisible = false
+        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+        binding.btnBack.isVisible = true
         binding.searchContainer.isVisible = true
         binding.tvTitle.isVisible = false
-        binding.btnNotifications.isVisible = true
+        binding.btnNotifications.isVisible = false
     }
 
     private fun uiStateHomeSearchedProduct() {
         binding.btnMenu.isVisible = false
+        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         binding.btnBack.isVisible = true
         binding.searchContainer.isVisible = true
         binding.tvTitle.isVisible = false
@@ -135,6 +139,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun uiStateHomeProductDetail() {
         binding.btnMenu.isVisible = false
+        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         binding.btnBack.isVisible = true
         binding.searchContainer.isVisible = false
         binding.tvTitle.isVisible = true
@@ -177,6 +182,8 @@ class MainActivity : AppCompatActivity() {
                 val query = binding.etSearch.text.toString().trim()
                 if (query.isNotEmpty()){
                     homeViewModel.setQuery(query)
+                } else {
+                    homeViewModel.onBackPressed.value?.let { it() }
                 }
 
                 return@setOnEditorActionListener true
