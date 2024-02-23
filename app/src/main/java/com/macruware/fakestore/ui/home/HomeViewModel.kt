@@ -3,18 +3,27 @@ package com.macruware.fakestore.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.macruware.fakestore.domain.model.CategoryNameModel
 import com.macruware.fakestore.domain.model.CategoryProductModel
 import com.macruware.fakestore.domain.model.ProductModel
+import com.macruware.fakestore.domain.usecase.GetAllCategoriesUseCase
+import com.macruware.fakestore.domain.usecase.GetProductsInCategoryUseCase
 import com.macruware.fakestore.ui.main.MainApiState
 import com.macruware.fakestore.ui.main.MainUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor() : ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val getAllCategoriesUseCase: GetAllCategoriesUseCase,
+    private val getProductsInCategoryUseCase: GetProductsInCategoryUseCase) : ViewModel() {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Bloque de búsqueda
@@ -129,57 +138,58 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     private var _categoryList = MutableStateFlow<List<CategoryNameModel>>(emptyList())
 
     fun getCategories() {
+        _mainApiState.value = MainApiState.Loading
         // llamar a la api /products/categories
+        viewModelScope.launch {
+            val response = withContext(IO){
+                getAllCategoriesUseCase.invoke()
+            }
 
-        // si no es null
-        val response = listOf(
-            CategoryNameModel("electronics"),
-            CategoryNameModel("jewelery"),
-            CategoryNameModel("men's clothing"),
-            CategoryNameModel("women's clothing")
-        )
-        _categoryList.value = response
+            // si no es null
+            if (response != null){
+                // Guardamos la lista de las categorías
+                _categoryList.value = response
 
-        _mainApiState.value = MainApiState.Success(_categoryList.value)
+                // Cambiamos el estado de mainApi y le mandamos la lista
+                _mainApiState.value = MainApiState.Success(_categoryList.value)
 
-        // Obtener todos los productos de cada categoría
-        getAllProductsInCategory()
+                // Obtener todos los productos de cada categoría
+                getAllProductsInCategory()
+            } else {
+                _mainApiState.value = MainApiState.Error("No ha sido posible obtener la información del servidor.")
+            }
+        }
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Bloque de estados de la api de home
-    // Pide la lista de productos de cada categoría para homeplp
+    // Pide la lista de productos de cada categoría para homePlp
     private var _homeApiState = MutableStateFlow<HomeApiState>(HomeApiState.Loading)
     val homeApiState: StateFlow<HomeApiState> get() = _homeApiState
 
     private var _categoryWithProductList = MutableStateFlow(mutableListOf<CategoryProductModel>())
 
     private fun getAllProductsInCategory() {
+        _homeApiState.value = HomeApiState.Loading
+
+        // llamar a la api /products/category/{category}
         for (category in _categoryList.value){
             // llamar a la api /products/category/{category}
+            viewModelScope.launch {
+                val response = withContext(IO){ getProductsInCategoryUseCase.invoke(category.name) }
 
-            // si no es null
-            val response = listOf(
-                ProductModel("Electronic Product 1", 49.99,"Jewelry", "Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10),
-                ProductModel("Electronic Product 2", 99.99,"Jewelry", "Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8),
-                ProductModel("Electronic Product 3", 29.99,"Jewelry", "Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15),
-                ProductModel("Electronic Product 4", 79.99,"Jewelry", "Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12),
-                ProductModel("Electronic Product 5", 59.99,"Jewelry", "Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 20),
-                ProductModel("Electronic Product 1", 49.99,"Jewelry", "Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10),
-                ProductModel("Electronic Product 2", 99.99,"Jewelry", "Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8),
-                ProductModel("Electronic Product 3", 29.99,"Jewelry", "Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15),
-                ProductModel("Electronic Product 4", 79.99,"Jewelry", "Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12),
-                ProductModel("Electronic Product 5", 59.99,"Jewelry", "Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 20),
-                ProductModel("Electronic Product 1", 49.99,"Jewelry", "Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10),
-                ProductModel("Electronic Product 2", 99.99,"Jewelry", "Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8),
-                ProductModel("Electronic Product 3", 29.99,"Jewelry", "Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15),
-                ProductModel("Electronic Product 4", 79.99,"Jewelry", "Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12))
+                // si no es null
+                if (response != null){
+                    _categoryWithProductList.value.add(response)
 
-            val categoryProductModel = CategoryProductModel(category.name, response)
-            _categoryWithProductList.value.add(categoryProductModel)
+                    _homeApiState.value = HomeApiState.Loading
+                    _homeApiState.value = HomeApiState.Success(_categoryWithProductList.value)
 
-            _homeApiState.value = HomeApiState.Success(_categoryWithProductList.value)
+                } else {
+                    _homeApiState.value = HomeApiState.Error("Error al obtener lista de productos de la categoría: ${category.name}")
+                }
+            }
         }
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -196,7 +206,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         _productListFromCategory.value = getProductListOfCurrentCategory()
     }
 
-    // CategoryPlp pide la lista de productos de la categoría seleccionada
+    // Al cambiar a CategoryPlp se guarda la lista de productos de la categoría seleccionada
     private fun getProductListOfCurrentCategory(): List<ProductModel>{
         for (categoryWithProduct in _categoryWithProductList.value){
             if (categoryWithProduct.category == _currentCategory.value){

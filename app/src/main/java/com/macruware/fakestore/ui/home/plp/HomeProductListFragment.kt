@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -84,15 +85,17 @@ class HomeProductListFragment : Fragment() {
     }
 
     private fun homeApiStateLoading() {
-
+        binding.progressBar.isVisible = true
     }
 
     private fun homeApiStateSuccess(state: HomeApiState.Success){
+        binding.progressBar.isVisible = false
         categoryProductAdapter.updateList(state.categoryWithProductList)
     }
 
     private fun homeApiStateError(state: HomeApiState.Error){
-        Log.e("HomeApiState", state.error)
+        binding.progressBar.isVisible = false
+        Toast.makeText(requireActivity(), state.error, Toast.LENGTH_LONG).show()
     }
 
     private fun configRecycler() {

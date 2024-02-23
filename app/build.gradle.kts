@@ -46,6 +46,7 @@ dependencies {
 
     val navigationVersion = "2.7.6"
     val glideVersion = "4.12.0"
+    val retrofitVersion = "2.9.0"
 
     // Fragment Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
@@ -58,6 +59,13 @@ dependencies {
     //DaggerHilt
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-compiler:2.48")
+
+    //Retrofit
+    implementation ("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    implementation ("com.squareup.retrofit2:converter-gson:$retrofitVersion")
+
+    // Interceptor
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.3.1")
 
     // LiveData
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")

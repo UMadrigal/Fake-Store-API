@@ -40,4 +40,5 @@
     <string name="text_pdp_description">Descripción</string>
     <string name="text_pdp_reviews">Reseñas</string>
     <string name="text_review_score">Calificación</string>
+    <string name="text_product_sign_price">$ </string>
 </resources>

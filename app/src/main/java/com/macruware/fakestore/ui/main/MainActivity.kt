@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun apiStateError(state: Error){
-        Toast.makeText(this, state.error, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, state.error, Toast.LENGTH_LONG).show()
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
