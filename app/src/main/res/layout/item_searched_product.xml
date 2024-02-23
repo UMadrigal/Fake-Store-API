@@ -54,6 +54,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="4dp"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     tools:text="Product name" />
 
                 <TextView
@@ -61,7 +63,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="4dp"
-                    android:maxLines="4"
+                    android:maxLines="3"
                     android:ellipsize="end"
                     tools:text="Description Description Description Description Description " />
 

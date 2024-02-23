@@ -9,8 +9,11 @@ class CategoryNameViewHolder(view: View) : ViewHolder(view) {
 
     private val binding = ItemCategoryNameBinding.bind(view)
 
-    fun bind(item: CategoryNameModel) {
+    fun bind(item: CategoryNameModel, onCategorySelected: (String) -> Unit) {
         binding.tvDrawerMenuCategoryName.text = item.name
+        binding.tvDrawerMenuCategoryName.setOnClickListener {
+            onCategorySelected(item.name)
+        }
     }
 
 }

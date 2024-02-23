@@ -51,6 +51,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="4dp"
                 android:textSize="14sp"
+                android:maxLines="2"
+                android:ellipsize="end"
                 tools:text="Product name" />
 
             <TextView

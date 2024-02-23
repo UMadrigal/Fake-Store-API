@@ -20,7 +20,7 @@ class CategoryPlpViewHolder(view: View) : ViewHolder(view) {
 
         binding.tvProductName.text = product.name
 
-        binding.tvProductPrice.append(product.price.toString())
+        binding.tvProductPrice.text = "$" + product.price
 
         binding.containerCard.setOnClickListener {
             onItemClickListener(product)

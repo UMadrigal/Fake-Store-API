@@ -2,6 +2,7 @@ package com.macruware.fakestore.data.network
 
 import com.macruware.fakestore.data.network.response.CategoriesResponse
 import com.macruware.fakestore.data.network.response.ProductInCategoryResponse
+import com.macruware.fakestore.data.network.response.ProductListResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -12,5 +13,8 @@ interface FakeStoreApiService {
 
     @GET("/products/category/{category}")
     suspend fun getProductsInCategory(@Path("category") category: String): ProductInCategoryResponse
+
+    @GET("/products")
+    suspend fun getAllProducts(): ProductListResponse
 
 }

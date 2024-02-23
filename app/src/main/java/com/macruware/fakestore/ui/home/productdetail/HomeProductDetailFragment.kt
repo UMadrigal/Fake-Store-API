@@ -83,7 +83,7 @@ class HomeProductDetailFragment : Fragment() {
                 .into(binding.imgProduct)
 
             binding.tvProductName.text = currentProduct!!.name
-            binding.tvProductPrice.append(currentProduct!!.price.toString())
+            binding.tvProductPrice.append(currentProduct!!.price)
             binding.tvProductCategory.text = currentProduct!!.category
             binding.tvProductDescription.text = currentProduct!!.description
             binding.tvReviewCounter.text = currentProduct!!.count.toString()

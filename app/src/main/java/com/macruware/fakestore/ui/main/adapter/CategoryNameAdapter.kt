@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.macruware.fakestore.R
 import com.macruware.fakestore.domain.model.CategoryNameModel
 
-class CategoryNameAdapter(private var categoryNameList: List<CategoryNameModel> = emptyList()) : RecyclerView.Adapter<CategoryNameViewHolder>() {
+class CategoryNameAdapter(
+    private var categoryNameList: List<CategoryNameModel> = emptyList(),
+    private val onCategorySelected: (String) -> Unit) : RecyclerView.Adapter<CategoryNameViewHolder>() {
 
     fun updateList(list: List<CategoryNameModel>){
         categoryNameList = list
@@ -21,7 +23,7 @@ class CategoryNameAdapter(private var categoryNameList: List<CategoryNameModel> 
 
     override fun onBindViewHolder(holder: CategoryNameViewHolder, position: Int) {
         val item = categoryNameList[position]
-        holder.bind(item)
+        holder.bind(item, onCategorySelected)
     }
 
     override fun getItemCount(): Int = categoryNameList.size

@@ -1,5 +1,6 @@
 package com.macruware.fakestore.ui.home.searchedplp.adapter
 
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +21,7 @@ class SearchedProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         binding.tvProductDescription.text = item.description
 
-        binding.tvProductPrice.append(item.price.toString())
+        binding.tvProductPrice.text = "$" + item.price
 
         binding.containerCard.setOnClickListener {
             onItemClickListener(item)

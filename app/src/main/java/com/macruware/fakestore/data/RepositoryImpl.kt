@@ -5,6 +5,7 @@ import com.macruware.fakestore.data.network.FakeStoreApiService
 import com.macruware.fakestore.domain.Repository
 import com.macruware.fakestore.domain.model.CategoryNameModel
 import com.macruware.fakestore.domain.model.CategoryProductModel
+import com.macruware.fakestore.domain.model.ProductModel
 import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(private val apiService: FakeStoreApiService): Repository {
@@ -18,6 +19,13 @@ class RepositoryImpl @Inject constructor(private val apiService: FakeStoreApiSer
 
     override suspend fun getProductsInCategory(category: String): CategoryProductModel? {
         runCatching { apiService.getProductsInCategory(category) }
+            .onSuccess { return it.toDomain() }
+            .onFailure { Log.e("ApiState", "Ha ocurrido un error en la llamada: ${it.message}") }
+        return null
+    }
+
+    override suspend fun getAllProducts(): List<ProductModel>? {
+        runCatching { apiService.getAllProducts() }
             .onSuccess { return it.toDomain() }
             .onFailure { Log.e("ApiState", "Ha ocurrido un error en la llamada: ${it.message}") }
         return null

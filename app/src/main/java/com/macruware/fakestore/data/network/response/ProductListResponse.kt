@@ -1,11 +1,10 @@
 package com.macruware.fakestore.data.network.response
 
-import com.macruware.fakestore.domain.model.CategoryProductModel
 import com.macruware.fakestore.domain.model.ProductModel
 
-class ProductInCategoryResponse : ArrayList<ProductInCategoryResponseItem>(){
+class ProductListResponse: ArrayList<ProductInCategoryResponseItem>(){
 
-    fun toDomain(): CategoryProductModel {
+    fun toDomain(): List<ProductModel> {
         val listToDomain = mutableListOf<ProductModel>()
 
         // Mapeando un ProductModel a partir de un ProductInCategoryResponseItem
@@ -23,6 +22,6 @@ class ProductInCategoryResponse : ArrayList<ProductInCategoryResponseItem>(){
             listToDomain.add(productModel)
         }
 
-        return CategoryProductModel(category = get(0).category, listToDomain)
+        return listToDomain
     }
 }

@@ -120,8 +120,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun uiStateHomeCategoryPlp() {
-        binding.btnMenu.isVisible = true
-        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+        binding.btnMenu.isVisible = false
+        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         binding.btnBack.isVisible = true
         binding.searchContainer.isVisible = true
         binding.tvTitle.isVisible = false
@@ -142,16 +142,24 @@ class MainActivity : AppCompatActivity() {
         binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         binding.btnBack.isVisible = true
         binding.searchContainer.isVisible = false
-        binding.tvTitle.isVisible = true
+        binding.tvTitle.isVisible = false
         binding.btnNotifications.isVisible = false
     }
 
     private fun configCategoriesRecycler() {
-        categoryNameAdapter = CategoryNameAdapter()
+        categoryNameAdapter = CategoryNameAdapter(
+            onCategorySelected = { category: String -> onCategorySelected(category) }
+        )
+
         binding.rvCategories.apply {
             adapter = categoryNameAdapter
             layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
         }
+    }
+
+    private fun onCategorySelected(category: String){
+        binding.drawerLayout.close()
+        homeViewModel.goToCategory(category)
     }
 
     private fun configListeners() {

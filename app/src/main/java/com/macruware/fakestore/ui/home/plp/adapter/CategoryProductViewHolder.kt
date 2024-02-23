@@ -18,14 +18,14 @@ class CategoryProductViewHolder(view:View): ViewHolder(view) {
 
     fun bind(
         item: CategoryProductModel,
-        onBtnViewAllClickListener: (CategoryProductModel) -> Unit,
+        onBtnViewAllClickListener: (String) -> Unit,
         onProductClickListener: (ProductModel) -> Unit)
     {
         if (item.productList.size >= 2){
 
             binding.tvCategory.text = item.category
             binding.btnViewAll.setOnClickListener {
-                onBtnViewAllClickListener(item)
+                onBtnViewAllClickListener(item.category)
             }
 
             val productList = listOf(

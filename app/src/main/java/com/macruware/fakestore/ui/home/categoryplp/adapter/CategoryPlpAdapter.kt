@@ -2,9 +2,11 @@ package com.macruware.fakestore.ui.home.categoryplp.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.macruware.fakestore.R
 import com.macruware.fakestore.domain.model.ProductModel
+import com.macruware.fakestore.ui.home.ProductListDiffUtil
 
 class CategoryPlpAdapter(
     private var categoryPlpList: List<ProductModel> = emptyList(),
@@ -12,8 +14,14 @@ class CategoryPlpAdapter(
 ): RecyclerView.Adapter<CategoryPlpViewHolder>() {
 
     fun updateList(list: List<ProductModel>){
+        val categoryPlpDiffUtil = ProductListDiffUtil(categoryPlpList, list)
+        val result = DiffUtil.calculateDiff(categoryPlpDiffUtil)
+
         categoryPlpList = list
-        notifyDataSetChanged()
+        result.dispatchUpdatesTo(this)
+
+//        categoryPlpList = list
+//        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryPlpViewHolder {

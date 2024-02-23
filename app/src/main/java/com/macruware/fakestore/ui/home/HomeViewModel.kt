@@ -8,7 +8,9 @@ import com.macruware.fakestore.domain.model.CategoryNameModel
 import com.macruware.fakestore.domain.model.CategoryProductModel
 import com.macruware.fakestore.domain.model.ProductModel
 import com.macruware.fakestore.domain.usecase.GetAllCategoriesUseCase
+import com.macruware.fakestore.domain.usecase.GetAllProductsUseCase
 import com.macruware.fakestore.domain.usecase.GetProductsInCategoryUseCase
+import com.macruware.fakestore.ui.home.searchedplp.SearchedApiState
 import com.macruware.fakestore.ui.main.MainApiState
 import com.macruware.fakestore.ui.main.MainUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getAllCategoriesUseCase: GetAllCategoriesUseCase,
-    private val getProductsInCategoryUseCase: GetProductsInCategoryUseCase) : ViewModel() {
+    private val getProductsInCategoryUseCase: GetProductsInCategoryUseCase,
+    private val getAllProductsUseCase: GetAllProductsUseCase) : ViewModel() {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Bloque de búsqueda
@@ -46,38 +49,28 @@ class HomeViewModel @Inject constructor(
     ////////////////////////////////////////
 
     private var _productList = MutableStateFlow<List<ProductModel>>(emptyList())
+    private var _searchedApiState = MutableStateFlow<SearchedApiState>(SearchedApiState.Loading)
+    val searchedApiState: StateFlow<SearchedApiState> get() = _searchedApiState
 
-    fun getAllProducts(): List<ProductModel>{
+    fun getAllProducts(){
+        _searchedApiState.value = SearchedApiState.Loading
+
         // llamar api get all products /products
-        // si no es null
-        val response = listOf<ProductModel>(
-            ProductModel("Electronic Product 1", 49.99,"Jewelry", "Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10),
-            ProductModel("Electronic Product 2", 99.99,"Jewelry", "Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8),
-            ProductModel("Electronic Product 3", 29.99,"Jewelry", "Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15),
-            ProductModel("Electronic Product 4", 79.99,"Jewelry", "Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12),
-            ProductModel("Electronic Product 5", 59.99,"Jewelry", "Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 20),
-            ProductModel("Electronic Product 1", 49.99,"Jewelry", "Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10),
-            ProductModel("Electronic Product 2", 99.99,"Jewelry", "Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8),
-            ProductModel("Electronic Product 3", 29.99,"Jewelry", "Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15),
-            ProductModel("Electronic Product 4", 79.99,"Jewelry", "Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12),
-            ProductModel("Electronic Product 5", 59.99,"Jewelry", "Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 20),
-            ProductModel("Electronic Product 1", 49.99,"Jewelry", "Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10),
-            ProductModel("Electronic Product 2", 99.99,"Jewelry", "Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8),
-            ProductModel("Electronic Product 3", 29.99,"Jewelry", "Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15),
-            ProductModel("Electronic Product 4", 79.99,"Jewelry", "Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12),
-            ProductModel("Electronic Product 5", 59.99,"Jewelry", "Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 20),
-            ProductModel("Electronic Product 1", 49.99,"Jewelry", "Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10),
-            ProductModel("Electronic Product 2", 99.99,"Jewelry", "Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8),
-            ProductModel("Electronic Product 3", 29.99,"Jewelry", "Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15),
-            ProductModel("Electronic Product 4", 79.99,"Jewelry", "Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12),
-            ProductModel("Electronic Product 5", 59.99,"Jewelry", "Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 20)
-        )
+        viewModelScope.launch {
+            val response = withContext(IO){ getAllProductsUseCase.invoke() }
 
-        // Guardar lista de todos los productos
-        _productList.value = response
+            // si no es null
+            if(response != null){
+                // Guardar lista de todos los productos
+                _productList.value = response
 
-        // Filtrar query en lista de productos
-        return filterByQuery()
+                // Filtrar query en lista de productos
+                _searchedApiState.value = SearchedApiState.Success(filterByQuery())
+            } else {
+                _searchedApiState.value = SearchedApiState.Error("Ha ocurrido un problema al obtener el listado de productos")
+            }
+        }
+
     }
 
     // Función llamada desde searchedFragment a través de lambda
@@ -183,8 +176,9 @@ class HomeViewModel @Inject constructor(
                 if (response != null){
                     _categoryWithProductList.value.add(response)
 
+                    val updatedList : List<CategoryProductModel> = _categoryWithProductList.value
                     _homeApiState.value = HomeApiState.Loading
-                    _homeApiState.value = HomeApiState.Success(_categoryWithProductList.value)
+                    _homeApiState.value = HomeApiState.Success(updatedList)
 
                 } else {
                     _homeApiState.value = HomeApiState.Error("Error al obtener lista de productos de la categoría: ${category.name}")
@@ -214,6 +208,16 @@ class HomeViewModel @Inject constructor(
             }
         }
         return emptyList()
+    }
+
+    private var _lambdaFunctionForCategory: ((String) -> Unit)? = null
+
+    fun setLambdaFunctionForCategory(category : (String) -> Unit){
+        _lambdaFunctionForCategory = category
+    }
+
+    fun goToCategory(category: String){
+        _lambdaFunctionForCategory?.let { it(category) }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

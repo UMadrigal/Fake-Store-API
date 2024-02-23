@@ -1,6 +1,7 @@
 package com.macruware.fakestore.ui.home.plp
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -56,6 +57,7 @@ class HomeProductListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         homeViewModel.setLambdaFunction { goToSearched() }
+        homeViewModel.setLambdaFunctionForCategory { category: String -> goToCategoryPlp(category) }
         homeViewModel.setMainUiState(HomeProductList)
 
         initUI()
@@ -100,7 +102,7 @@ class HomeProductListFragment : Fragment() {
 
     private fun configRecycler() {
         categoryProductAdapter = CategoryProductAdapter(
-            onBtnViewAllClickListener =  { category: CategoryProductModel -> goToCategoryPlp(category)},
+            onBtnViewAllClickListener =  { category: String -> goToCategoryPlp(category)},
             onProductClickListener = {product: ProductModel -> goToPdp(product)}
         )
         binding.recyclerView.apply {
@@ -109,8 +111,8 @@ class HomeProductListFragment : Fragment() {
         }
     }
 
-    private fun goToCategoryPlp(category: CategoryProductModel){
-        homeViewModel.setCurrentCategory(category.category)
+    private fun goToCategoryPlp(category: String){
+        homeViewModel.setCurrentCategory(category)
         findNavController().navigate(R.id.action_homeProductListFragment_to_homeCategoryPlpFragment)
     }
 

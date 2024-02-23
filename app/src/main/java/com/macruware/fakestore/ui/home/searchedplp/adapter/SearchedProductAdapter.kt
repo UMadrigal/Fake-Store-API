@@ -2,9 +2,11 @@ package com.macruware.fakestore.ui.home.searchedplp.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.macruware.fakestore.R
 import com.macruware.fakestore.domain.model.ProductModel
+import com.macruware.fakestore.ui.home.ProductListDiffUtil
 
 class SearchedProductAdapter(
     private var searchedProductList: List<ProductModel> = emptyList(),
@@ -12,8 +14,14 @@ class SearchedProductAdapter(
 ): RecyclerView.Adapter<SearchedProductViewHolder>() {
 
     fun updateList(list: List<ProductModel>){
+        val searchedProductDiffUtil = ProductListDiffUtil(searchedProductList, list)
+        val result = DiffUtil.calculateDiff(searchedProductDiffUtil)
+
         searchedProductList = list
-        notifyDataSetChanged()
+        result.dispatchUpdatesTo(this)
+
+//        searchedProductList = list
+//        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchedProductViewHolder {
