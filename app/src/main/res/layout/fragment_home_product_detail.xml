@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.home.productdetail.HomeProductDetailFragment">
 
     <androidx.core.widget.NestedScrollView
@@ -14,13 +15,22 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ImageView
+            <com.jsibbold.zoomage.ZoomageView
                 android:id="@+id/imgProduct"
                 android:layout_width="match_parent"
                 android:layout_height="380dp"
                 android:src="@drawable/img_product_2"
                 android:background="@color/white"
-                android:scaleType="centerInside"/>
+                android:scaleType="centerInside"
+                app:zoomage_translatable="true"/>
+
+<!--            <ImageView-->
+<!--                android:id="@+id/imgProduct"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="380dp"-->
+<!--                android:src="@drawable/img_product_2"-->
+<!--                android:background="@color/white"-->
+<!--                android:scaleType="centerInside"/>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -117,11 +127,24 @@
 
             </LinearLayout>
 
-            <ImageView
-                android:layout_width="120dp"
-                android:layout_height="16dp"
+            <com.willy.ratingbar.ScaleRatingBar
+                android:id="@+id/simpleRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:background="@color/gray"/>
+                app:srb_clearRatingEnabled="false"
+                app:srb_clickable="false"
+                app:srb_drawableEmpty="@drawable/ic_rate_star_empty"
+                app:srb_drawableFilled="@drawable/ic_rate_star_selected"
+                app:srb_isIndicator="true"
+                app:srb_minimumStars="0"
+                app:srb_numStars="5"
+                app:srb_rating="0"
+                app:srb_scrollable="false"
+                app:srb_starHeight="24dp"
+                app:srb_starWidth="24dp"
+                app:srb_starPadding="0dp"
+                app:srb_stepSize="0.25" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvReview"

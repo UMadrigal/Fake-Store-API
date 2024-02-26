@@ -20,6 +20,8 @@ class HomeProductDetailViewHolder(view: View): ViewHolder(view){
         binding.tvPersonName.text = review.personName
         binding.tvReviewScore.text = review.score.toString()
         binding.tvReview.text = review.reviewText
+
+        binding.simpleRatingBar.rating = review.score.toFloat()
     }
 
 }

@@ -100,6 +100,14 @@ class HomeProductDetailFragment : Fragment() {
         }
 
         homeProductDetailAdapter.setReviewList(currentProduct!!.reviewList)
+
+        var score : Float = 0.0f
+        for(review in currentProduct!!.reviewList){
+            score += review.score.toFloat()
+        }
+        score /= currentProduct!!.reviewList.size
+
+        binding.simpleRatingBar.rating = score
     }
 
     private fun onBtnBackPressed(){
