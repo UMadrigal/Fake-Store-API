@@ -178,27 +178,33 @@ class HomeViewModel @Inject constructor(
         _homeApiState.value = HomeApiState.Loading
         _categoryWithProductList.value = mutableListOf()
 
-        // llamar a la api /products/category/{category}
-        for (category in _categoryList.value) {
-            // llamar a la api /products/category/{category}
             viewModelScope.launch {
-                val response =
-                    withContext(IO) { getProductsInCategoryUseCase.invoke(category.name) }
-
-                // si no es null
-                if (response != null) {
-                    _categoryWithProductList.value.add(response)
-
-                    val updatedList: List<CategoryProductModel> = _categoryWithProductList.value
-                    _homeApiState.value = HomeApiState.Loading
-                    _homeApiState.value = HomeApiState.Success(updatedList)
-
-                } else {
-                    _homeApiState.value =
-                        HomeApiState.Error("Error al obtener lista de productos de la categoría: ${category.name}")
+                // llamar a la api por cada una de las categorías
+                val deferredResponses = _categoryList.value.map { category ->
+                    async(IO) {
+                        getProductsInCategoryUseCase.invoke(category.name)
+                    }
                 }
+
+                // obtener el listado de respuestas en el mismo orden que se mandaron
+                val responses = deferredResponses.map { deferred -> deferred.await() }
+
+                // iterar la lista de respuestas y si no es null, guardar en lista de categoryWithProduct
+                for ((index, response) in responses.withIndex()) {
+                    if (response != null) {
+                        _categoryWithProductList.value.add(response)
+                    } else {
+                        _homeApiState.value =
+                            HomeApiState.Error("Error al obtener lista de productos de la categoría: ${_categoryList.value[index].name}")
+                        return@launch
+                    }
+                }
+
+                // una vez guardadas todas las responses, actualizar el state de homeApi
+                val updatedList: List<CategoryProductModel> = _categoryWithProductList.value
+                _homeApiState.value = HomeApiState.Loading
+                _homeApiState.value = HomeApiState.Success(updatedList)
             }
-        }
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
