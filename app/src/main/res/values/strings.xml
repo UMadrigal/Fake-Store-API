@@ -7,6 +7,7 @@
     <string name="text_title_login">Bienvenido</string>
     <string name="text_subtitle_login">Ingresa tus datos para continuar</string>
     <string name="text_btn_login">Iniciar sesión</string>
+    <string name="text_btn_checkout">Continuar compra</string>
     <string name="text_label_username">Usuario</string>
     <string name="text_label_password">Contraseña</string>
     <string name="text_dont_you_have_account">¿Aún no tienes cuenta?</string>

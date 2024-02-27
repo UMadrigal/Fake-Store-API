@@ -1,9 +1,11 @@
 package com.macruware.fakestore.ui.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.macruware.fakestore.domain.model.CartProductModel
 import com.macruware.fakestore.domain.model.CategoryNameModel
 import com.macruware.fakestore.domain.model.CategoryProductModel
 import com.macruware.fakestore.domain.model.ProductModel
@@ -21,12 +23,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.math.log
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getAllCategoriesUseCase: GetAllCategoriesUseCase,
     private val getProductsInCategoryUseCase: GetProductsInCategoryUseCase,
-    private val getAllProductsUseCase: GetAllProductsUseCase) : ViewModel() {
+    private val getAllProductsUseCase: GetAllProductsUseCase
+) : ViewModel() {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Bloque de búsqueda
@@ -52,22 +56,23 @@ class HomeViewModel @Inject constructor(
     private var _searchedApiState = MutableStateFlow<SearchedApiState>(SearchedApiState.Loading)
     val searchedApiState: StateFlow<SearchedApiState> get() = _searchedApiState
 
-    fun getAllProducts(){
+    fun getAllProducts() {
         _searchedApiState.value = SearchedApiState.Loading
 
         // llamar api get all products /products
         viewModelScope.launch {
-            val response = withContext(IO){ getAllProductsUseCase.invoke() }
+            val response = withContext(IO) { getAllProductsUseCase.invoke() }
 
             // si no es null
-            if(response != null){
+            if (response != null) {
                 // Guardar lista de todos los productos
                 _productList.value = response
 
                 // Filtrar query en lista de productos
                 _searchedApiState.value = SearchedApiState.Success(filterByQuery())
             } else {
-                _searchedApiState.value = SearchedApiState.Error("Ha ocurrido un problema al obtener el listado de productos")
+                _searchedApiState.value =
+                    SearchedApiState.Error("Ha ocurrido un problema al obtener el listado de productos")
             }
         }
 
@@ -80,7 +85,7 @@ class HomeViewModel @Inject constructor(
     }
 
     // Función llamada desde categoryFragment a través de lambda
-    fun searchIntoCategory(){
+    fun searchIntoCategory() {
         // obtener lista de productos de la categoría
         _productList.value = getProductListOfCurrentCategory()
 
@@ -88,8 +93,13 @@ class HomeViewModel @Inject constructor(
         _productListFromCategory.value = filterByQuery()
     }
 
-    private fun filterByQuery(): List<ProductModel>{
-        return _productList.value.filter { it.name.contains(searchQuery.value.toString(), ignoreCase = true) }
+    private fun filterByQuery(): List<ProductModel> {
+        return _productList.value.filter {
+            it.name.contains(
+                searchQuery.value.toString(),
+                ignoreCase = true
+            )
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -97,7 +107,7 @@ class HomeViewModel @Inject constructor(
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Bloque de guardado de producto actual
     private var _currentProduct = MutableStateFlow<ProductModel?>(null)
-    val currentProduct : StateFlow<ProductModel?> get() = _currentProduct
+    val currentProduct: StateFlow<ProductModel?> get() = _currentProduct
 
     fun setCurrentProduct(product: ProductModel?) {
         _currentProduct.value = product
@@ -134,12 +144,12 @@ class HomeViewModel @Inject constructor(
         _mainApiState.value = MainApiState.Loading
         // llamar a la api /products/categories
         viewModelScope.launch {
-            val response = withContext(IO){
+            val response = withContext(IO) {
                 getAllCategoriesUseCase.invoke()
             }
 
             // si no es null
-            if (response != null){
+            if (response != null) {
                 // Guardamos la lista de las categorías
                 _categoryList.value = response
 
@@ -149,7 +159,8 @@ class HomeViewModel @Inject constructor(
                 // Obtener todos los productos de cada categoría
                 getAllProductsInCategory()
             } else {
-                _mainApiState.value = MainApiState.Error("No ha sido posible obtener la información del servidor.")
+                _mainApiState.value =
+                    MainApiState.Error("No ha sido posible obtener la información del servidor.")
             }
         }
     }
@@ -165,23 +176,26 @@ class HomeViewModel @Inject constructor(
 
     private fun getAllProductsInCategory() {
         _homeApiState.value = HomeApiState.Loading
+        _categoryWithProductList.value = mutableListOf()
 
         // llamar a la api /products/category/{category}
-        for (category in _categoryList.value){
+        for (category in _categoryList.value) {
             // llamar a la api /products/category/{category}
             viewModelScope.launch {
-                val response = withContext(IO){ getProductsInCategoryUseCase.invoke(category.name) }
+                val response =
+                    withContext(IO) { getProductsInCategoryUseCase.invoke(category.name) }
 
                 // si no es null
-                if (response != null){
+                if (response != null) {
                     _categoryWithProductList.value.add(response)
 
-                    val updatedList : List<CategoryProductModel> = _categoryWithProductList.value
+                    val updatedList: List<CategoryProductModel> = _categoryWithProductList.value
                     _homeApiState.value = HomeApiState.Loading
                     _homeApiState.value = HomeApiState.Success(updatedList)
 
                 } else {
-                    _homeApiState.value = HomeApiState.Error("Error al obtener lista de productos de la categoría: ${category.name}")
+                    _homeApiState.value =
+                        HomeApiState.Error("Error al obtener lista de productos de la categoría: ${category.name}")
                 }
             }
         }
@@ -195,15 +209,15 @@ class HomeViewModel @Inject constructor(
     private var _productListFromCategory = MutableStateFlow<List<ProductModel>>(emptyList())
     val productListFromCategory: StateFlow<List<ProductModel>> get() = _productListFromCategory
 
-    fun setCurrentCategory(newCategory: String){
+    fun setCurrentCategory(newCategory: String) {
         _currentCategory.value = newCategory
         _productListFromCategory.value = getProductListOfCurrentCategory()
     }
 
     // Al cambiar a CategoryPlp se guarda la lista de productos de la categoría seleccionada
-    private fun getProductListOfCurrentCategory(): List<ProductModel>{
-        for (categoryWithProduct in _categoryWithProductList.value){
-            if (categoryWithProduct.category == _currentCategory.value){
+    private fun getProductListOfCurrentCategory(): List<ProductModel> {
+        for (categoryWithProduct in _categoryWithProductList.value) {
+            if (categoryWithProduct.category == _currentCategory.value) {
                 return categoryWithProduct.productList
             }
         }
@@ -212,12 +226,73 @@ class HomeViewModel @Inject constructor(
 
     private var _lambdaFunctionForCategory: ((String) -> Unit)? = null
 
-    fun setLambdaFunctionForCategory(category : (String) -> Unit){
+    fun setLambdaFunctionForCategory(category: (String) -> Unit) {
         _lambdaFunctionForCategory = category
     }
 
-    fun goToCategory(category: String){
+    fun goToCategory(category: String) {
         _lambdaFunctionForCategory?.let { it(category) }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    private var _cartProductList = MutableStateFlow<List<CartProductModel>>(
+        mutableListOf(
+            CartProductModel(2, ProductModel("Electronic Product 1", "49.99", "jewerly","Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10)),
+            CartProductModel(1, ProductModel("Electronic Product 2", "99.99", "jewerly", "Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8)),
+            CartProductModel(3, ProductModel("Electronic Product 3", "29.99", "jewerly", "Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15)),
+            CartProductModel(1, ProductModel("Electronic Product 4", "79.99", "jewerly", "Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12)),
+            CartProductModel(2, ProductModel("Electronic Product 5", "59.99", "jewerly", "Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 20))
+        )
+    )
+    val cartProductList: StateFlow<List<CartProductModel>> get() = _cartProductList
+
+    fun addProductToCart(cartProduct: CartProductModel) {
+        val newList : MutableList<CartProductModel> = cartProductList.value.map { it.copy() }.toMutableList()
+        var isContent = false
+        for (cartItem in newList){
+            if (cartItem.product.name == cartProduct.product.name){
+                isContent = true
+                val index = newList.indexOf(cartItem)
+                newList[index].quantity++
+            }
+        }
+        if (!isContent){
+            newList.add(cartProduct)
+        }
+
+        setCartProductList(newList)
+    }
+
+    fun removeProductFromCart(cartProduct: CartProductModel) {
+        val newList : MutableList<CartProductModel> = cartProductList.value.map { it.copy() }.toMutableList()
+
+        for (cartItem in newList){
+            if (cartItem.product.name == cartProduct.product.name){
+
+                val index = newList.indexOf(cartItem)
+                if (newList[index].quantity > 1){
+                    newList[index].quantity--
+                } else {
+                    newList.removeAt(index)
+                }
+
+                setCartProductList(newList)
+                break
+            }
+        }
+    }
+
+    private fun setCartProductList(list: List<CartProductModel>){
+        _cartProductList.value = list
+        // Guardar en firebase
+    }
+
+    fun getCartProductList(){
+        // Llamar a firebase
+        val cartProductList = _cartProductList.value
+        setCartProductList(cartProductList)
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
