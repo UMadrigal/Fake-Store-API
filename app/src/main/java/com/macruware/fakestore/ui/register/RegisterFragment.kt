@@ -10,7 +10,6 @@ import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.util.Patterns
 import android.view.KeyEvent
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,11 +20,14 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.macruware.fakestore.R
 import com.macruware.fakestore.databinding.FragmentRegisterBinding
 import com.macruware.fakestore.ui.main.MainActivity
-import com.macruware.fakestore.ui.register.RegisterState.*
+import com.macruware.fakestore.ui.register.RegisterState.Error
+import com.macruware.fakestore.ui.register.RegisterState.Loading
+import com.macruware.fakestore.ui.register.RegisterState.Success
 
 class RegisterFragment : Fragment() {
     private var _binding: FragmentRegisterBinding? = null

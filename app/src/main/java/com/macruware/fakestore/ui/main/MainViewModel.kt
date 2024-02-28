@@ -1,6 +1,5 @@
-package com.macruware.fakestore.ui.home
+package com.macruware.fakestore.ui.main
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,9 +11,8 @@ import com.macruware.fakestore.domain.model.ProductModel
 import com.macruware.fakestore.domain.usecase.GetAllCategoriesUseCase
 import com.macruware.fakestore.domain.usecase.GetAllProductsUseCase
 import com.macruware.fakestore.domain.usecase.GetProductsInCategoryUseCase
+import com.macruware.fakestore.ui.home.HomeApiState
 import com.macruware.fakestore.ui.home.searchedplp.SearchedApiState
-import com.macruware.fakestore.ui.main.MainApiState
-import com.macruware.fakestore.ui.main.MainUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
@@ -23,10 +21,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import kotlin.math.log
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class MainViewModel @Inject constructor(
     private val getAllCategoriesUseCase: GetAllCategoriesUseCase,
     private val getProductsInCategoryUseCase: GetProductsInCategoryUseCase,
     private val getAllProductsUseCase: GetAllProductsUseCase
@@ -56,30 +53,38 @@ class HomeViewModel @Inject constructor(
     private var _searchedApiState = MutableStateFlow<SearchedApiState>(SearchedApiState.Loading)
     val searchedApiState: StateFlow<SearchedApiState> get() = _searchedApiState
 
+    private var isInit = true
+
     fun getAllProducts() {
-        _searchedApiState.value = SearchedApiState.Loading
+        if (isInit){
+            _searchedApiState.value = SearchedApiState.Loading
 
-        // llamar api get all products /products
-        viewModelScope.launch {
-            val response = withContext(IO) { getAllProductsUseCase.invoke() }
+            // llamar api get all products /products
+            viewModelScope.launch {
+                val response = withContext(IO) { getAllProductsUseCase.invoke() }
 
-            // si no es null
-            if (response != null) {
-                // Guardar lista de todos los productos
-                _productList.value = response
+                // si no es null
+                if (response != null) {
+                    // Guardar lista de todos los productos
+                    _productList.value = response
 
-                // Filtrar query en lista de productos
-                _searchedApiState.value = SearchedApiState.Success(filterByQuery())
-            } else {
-                _searchedApiState.value =
-                    SearchedApiState.Error("Ha ocurrido un problema al obtener el listado de productos")
+                    // Filtrar query en lista de productos
+                    _searchedApiState.value = SearchedApiState.Success(filterByQuery())
+
+                    isInit = false
+                } else {
+                    _searchedApiState.value =
+                        SearchedApiState.Error("Ha ocurrido un problema al obtener el listado de productos")
+                }
             }
+        } else {
+            _searchedApiState.value = SearchedApiState.Success(reSearchQuery())
         }
 
     }
 
     // Función llamada desde searchedFragment a través de lambda
-    fun reSearchQuery(): List<ProductModel> {
+    private fun reSearchQuery(): List<ProductModel> {
         // Filtrar query en lista de productos
         return filterByQuery()
     }
@@ -123,12 +128,18 @@ class HomeViewModel @Inject constructor(
         _mainUiState.value = state
     }
 
-
     private var _onBackPressed = MutableLiveData<(() -> Unit)?>(null)
     val onBackPressed: LiveData<(() -> Unit)?> get() = _onBackPressed
 
     fun setOnBackPressedFunction(function: (() -> Unit)?) {
         _onBackPressed.value = function
+    }
+
+    private var _goBackToHome = MutableStateFlow(false)
+    val goBackToHome : StateFlow<Boolean> get() = _goBackToHome
+
+    fun setGoBackToHome(boolean: Boolean){
+        _goBackToHome.value = boolean
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -317,7 +328,12 @@ class HomeViewModel @Inject constructor(
         _isCartProductDeleted.value = false
     }
 
+    private var _isEmptyCart = MutableStateFlow(true)
+    val isEmptyCart : StateFlow<Boolean> get() = _isEmptyCart
+
     private fun setCartProductList(list: List<CartProductModel>){
+//        _isEmptyCart.value = _cartProductList.value.isEmpty()
+        _isEmptyCart.value = list.isEmpty()
         _cartProductList.value = list
         // Guardar en firebase
     }

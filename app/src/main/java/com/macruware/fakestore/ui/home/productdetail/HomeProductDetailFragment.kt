@@ -3,13 +3,12 @@ package com.macruware.fakestore.ui.home.productdetail
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -26,21 +25,22 @@ import com.macruware.fakestore.domain.model.CartProductModel
 import com.macruware.fakestore.domain.model.HomeFragmentProvider
 import com.macruware.fakestore.domain.model.HomeFragmentProvider.*
 import com.macruware.fakestore.domain.model.ProductModel
-import com.macruware.fakestore.ui.home.HomeViewModel
 import com.macruware.fakestore.ui.home.productdetail.adapter.HomeProductDetailAdapter
-import com.macruware.fakestore.ui.main.MainUiState
+import com.macruware.fakestore.ui.main.MainViewModel
 import com.macruware.fakestore.ui.main.MainUiState.*
 import kotlinx.coroutines.launch
 
 class HomeProductDetailFragment : Fragment() {
     private var _binding: FragmentHomeProductDetailBinding? = null
     private val binding get() = _binding!!
-    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var mainViewModel: MainViewModel
 
     private var currentProduct : ProductModel? = null
     private lateinit var homeProductDetailAdapter: HomeProductDetailAdapter
 
     private val previousFragment: HomeProductDetailFragmentArgs by navArgs()
+
+    private lateinit var snackBar: Snackbar
 
     private val callback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -53,16 +53,17 @@ class HomeProductDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeProductDetailBinding.inflate(layoutInflater, container, false)
-        homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
+        mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        homeViewModel.setMainUiState(HomeProductDetail)
-        homeViewModel.setOnBackPressedFunction { onBtnBackPressed() }
+        mainViewModel.setMainUiState(HomeProductDetail)
+        mainViewModel.setOnBackPressedFunction { onBtnBackPressed() }
 
+        snackBar = make(binding.root, "Producto agregado al carrito", LENGTH_SHORT)
         initUI()
     }
 
@@ -73,19 +74,19 @@ class HomeProductDetailFragment : Fragment() {
 
     private fun configListeners() {
         binding.btnAddToCart.setOnClickListener {
-            val newCartItem = CartProductModel(1, homeViewModel.currentProduct.value!!)
-            homeViewModel.addProductToCart(newCartItem)
+            val newCartItem = CartProductModel(1, mainViewModel.currentProduct.value!!)
+            mainViewModel.addProductToCart(newCartItem)
             showSnackBar()
         }
     }
 
     private fun configProduct() {
 
-        currentProduct = homeViewModel.currentProduct.value
+        currentProduct = mainViewModel.currentProduct.value
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                homeViewModel.currentProduct.collect{
+                mainViewModel.currentProduct.collect{
                     currentProduct = it
                 }
             }
@@ -128,25 +129,18 @@ class HomeProductDetailFragment : Fragment() {
     @SuppressLint("RestrictedApi")
     private fun showSnackBar(){
 
-        val rootView = binding.root
-
-        val snackbar = make(
-            rootView,
-            "\"Producto agregado al carrito\"",
-            LENGTH_SHORT
-        )
-
-        val snackbarLayout = snackbar.view as SnackbarLayout
+        val snackbarLayout = snackBar.view as SnackbarLayout
         val layoutParams = snackbarLayout.layoutParams as FrameLayout.LayoutParams
         val density = resources.displayMetrics.density
         layoutParams.gravity = Gravity.BOTTOM
         layoutParams.bottomMargin = (72 * density).toInt()
         snackbarLayout.layoutParams = layoutParams
 
-        snackbar.show()
+        snackBar.show()
     }
 
     private fun onBtnBackPressed(){
+        snackBar.dismiss()
         // Sobreescribimos el onBackPressed y dependiendo del previousFragment, navegamos hacia el correspondiente
         when(previousFragment.fragment){
             HomeProductListFragment -> findNavController().navigate(R.id.action_homeProductDetailFragment_to_homeProductListFragment)
@@ -155,6 +149,6 @@ class HomeProductDetailFragment : Fragment() {
             HomeFragmentProvider.CartDetailFragment -> findNavController().navigate(R.id.action_homeProductDetailFragment2_to_cartDetailFragment)
         }
 
-        homeViewModel.setCurrentProduct(null)
+        mainViewModel.setCurrentProduct(null)
     }
 }

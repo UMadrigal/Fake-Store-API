@@ -1,8 +1,7 @@
 package com.macruware.fakestore.ui.checkout
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.macruware.fakestore.R
+import androidx.appcompat.app.AppCompatActivity
 import com.macruware.fakestore.databinding.ActivityCheckoutBinding
 
 class CheckoutActivity : AppCompatActivity() {

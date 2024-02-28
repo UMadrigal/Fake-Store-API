@@ -1,14 +1,7 @@
 package com.macruware.fakestore.ui.login
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.method.HideReturnsTransformationMethod
-import android.text.method.PasswordTransformationMethod
-import android.view.KeyEvent
-import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
-import com.macruware.fakestore.R
+import androidx.appcompat.app.AppCompatActivity
 import com.macruware.fakestore.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {

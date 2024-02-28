@@ -1,15 +1,14 @@
 package com.macruware.fakestore.ui.home.searchedplp
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Lifecycle.*
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle.State
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -19,10 +18,9 @@ import com.macruware.fakestore.R
 import com.macruware.fakestore.databinding.FragmentSearchedProductBinding
 import com.macruware.fakestore.domain.model.HomeFragmentProvider
 import com.macruware.fakestore.domain.model.ProductModel
-import com.macruware.fakestore.ui.home.HomeViewModel
-import com.macruware.fakestore.ui.home.searchedplp.SearchedApiState
 import com.macruware.fakestore.ui.home.searchedplp.adapter.SearchedProductAdapter
-import com.macruware.fakestore.ui.main.MainUiState.*
+import com.macruware.fakestore.ui.main.MainViewModel
+import com.macruware.fakestore.ui.main.MainUiState.HomeSearchedProduct
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -30,7 +28,7 @@ import kotlinx.coroutines.launch
 class HomeSearchedProductFragment : Fragment() {
     private var _binding: FragmentSearchedProductBinding? = null
     private val binding get() = _binding!!
-    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var mainViewModel: MainViewModel
 
     private lateinit var searchedProductAdapter: SearchedProductAdapter
 
@@ -44,17 +42,17 @@ class HomeSearchedProductFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSearchedProductBinding.inflate(layoutInflater, container, false)
-        homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
+        mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        homeViewModel.setLambdaFunction { reSearchQuery() }
-        homeViewModel.setMainUiState(HomeSearchedProduct)
-        homeViewModel.setOnBackPressedFunction { onBtnBackPressed() }
-        homeViewModel.getAllProducts()
+        mainViewModel.setLambdaFunction { reSearchQuery() }
+        mainViewModel.setMainUiState(HomeSearchedProduct)
+        mainViewModel.setOnBackPressedFunction { onBtnBackPressed() }
+        mainViewModel.getAllProducts()
 
         initUI()
     }
@@ -67,7 +65,7 @@ class HomeSearchedProductFragment : Fragment() {
     private fun configSearchedApiState(){
         lifecycleScope.launch {
             repeatOnLifecycle(State.STARTED){
-                homeViewModel.searchedApiState.collect{
+                mainViewModel.searchedApiState.collect{
                     when(it){
                         is SearchedApiState.Loading -> searchedApiStateLoading()
                         is SearchedApiState.Success -> searchedApiStateSuccess(it)
@@ -111,12 +109,13 @@ class HomeSearchedProductFragment : Fragment() {
                 )
         )
 
-        homeViewModel.setCurrentProduct(product)
+        mainViewModel.setCurrentProduct(product)
 
     }
 
     private fun reSearchQuery(){
-        searchedProductAdapter.updateList(homeViewModel.reSearchQuery())
+        mainViewModel.getAllProducts()
+//        searchedProductAdapter.updateList(mainViewModel.reSearchQuery())
     }
 
     private fun onBtnBackPressed(){

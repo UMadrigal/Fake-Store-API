@@ -1,6 +1,5 @@
 package com.macruware.fakestore.ui.home.searchedplp.adapter
 
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView

@@ -1,9 +1,6 @@
 package com.macruware.fakestore.ui.home.plp
 
 import android.os.Bundle
-import android.os.Parcelable
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -19,14 +17,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.macruware.fakestore.R
 import com.macruware.fakestore.databinding.FragmentHomeProductListBinding
-import com.macruware.fakestore.domain.model.CategoryProductModel
 import com.macruware.fakestore.domain.model.HomeFragmentProvider
 import com.macruware.fakestore.domain.model.ProductModel
 import com.macruware.fakestore.ui.home.HomeApiState
-import com.macruware.fakestore.ui.home.HomeViewModel
 import com.macruware.fakestore.ui.home.plp.adapter.CategoryProductAdapter
-import com.macruware.fakestore.ui.main.MainUiState
-import com.macruware.fakestore.ui.main.MainUiState.*
+import com.macruware.fakestore.ui.main.MainViewModel
+import com.macruware.fakestore.ui.main.MainUiState.HomeProductList
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -34,7 +30,7 @@ import kotlinx.coroutines.launch
 class HomeProductListFragment : Fragment() {
     private var _binding: FragmentHomeProductListBinding? = null
     private val binding get() = _binding!!
-    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var mainViewModel: MainViewModel
 
     private val callback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -49,16 +45,16 @@ class HomeProductListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeProductListBinding.inflate(layoutInflater,container,false)
-        homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
+        mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        homeViewModel.setLambdaFunction { goToSearched() }
-        homeViewModel.setLambdaFunctionForCategory { category: String -> goToCategoryPlp(category) }
-        homeViewModel.setMainUiState(HomeProductList)
+        mainViewModel.setLambdaFunction { goToSearched() }
+        mainViewModel.setLambdaFunctionForCategory { category: String -> goToCategoryPlp(category) }
+        mainViewModel.setMainUiState(HomeProductList)
 
         initUI()
     }
@@ -75,7 +71,7 @@ class HomeProductListFragment : Fragment() {
     private fun configHomeApiState() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                homeViewModel.homeApiState.collect{
+                mainViewModel.homeApiState.collect{
                     when(it){
                         is HomeApiState.Loading -> homeApiStateLoading()
                         is HomeApiState.Success -> homeApiStateSuccess(it)
@@ -112,7 +108,7 @@ class HomeProductListFragment : Fragment() {
     }
 
     private fun goToCategoryPlp(category: String){
-        homeViewModel.setCurrentCategory(category)
+        mainViewModel.setCurrentCategory(category)
         findNavController().navigate(R.id.action_homeProductListFragment_to_homeCategoryPlpFragment)
     }
 
@@ -123,7 +119,7 @@ class HomeProductListFragment : Fragment() {
                     HomeFragmentProvider.HomeProductListFragment)
         )
 
-        homeViewModel.setCurrentProduct(product)
+        mainViewModel.setCurrentProduct(product)
 
     }
 

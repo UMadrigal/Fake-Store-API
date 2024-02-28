@@ -1,11 +1,10 @@
 package com.macruware.fakestore.ui.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.macruware.fakestore.R
+import androidx.fragment.app.Fragment
 import com.macruware.fakestore.databinding.FragmentHomeContainerBinding
 
 class HomeContainerFragment : Fragment() {

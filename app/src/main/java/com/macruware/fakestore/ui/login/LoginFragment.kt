@@ -8,7 +8,6 @@ import android.text.InputFilter
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +21,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.macruware.fakestore.R
 import com.macruware.fakestore.databinding.FragmentLoginBinding
-import com.macruware.fakestore.ui.login.LoginState.*
+import com.macruware.fakestore.ui.login.LoginState.Error
+import com.macruware.fakestore.ui.login.LoginState.Loading
+import com.macruware.fakestore.ui.login.LoginState.Success
 import com.macruware.fakestore.ui.main.MainActivity
 
 class LoginFragment : Fragment() {

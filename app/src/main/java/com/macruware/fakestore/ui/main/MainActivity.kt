@@ -1,18 +1,17 @@
 package com.macruware.fakestore.ui.main
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycle.State
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -23,10 +22,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.macruware.fakestore.R
 import com.macruware.fakestore.databinding.ActivityMainBinding
-import com.macruware.fakestore.domain.model.CategoryNameModel
-import com.macruware.fakestore.ui.home.HomeViewModel
-import com.macruware.fakestore.ui.main.MainApiState.*
-import com.macruware.fakestore.ui.main.MainUiState.*
+import com.macruware.fakestore.ui.main.MainApiState.Error
+import com.macruware.fakestore.ui.main.MainApiState.Loading
+import com.macruware.fakestore.ui.main.MainApiState.Success
+import com.macruware.fakestore.ui.main.MainUiState.CartDetailFragment
+import com.macruware.fakestore.ui.main.MainUiState.HomeCategoryPlp
+import com.macruware.fakestore.ui.main.MainUiState.HomeProductDetail
+import com.macruware.fakestore.ui.main.MainUiState.HomeProductList
+import com.macruware.fakestore.ui.main.MainUiState.HomeSearchedProduct
 import com.macruware.fakestore.ui.main.adapter.CategoryNameAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -35,7 +38,7 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var mainViewModel: MainViewModel
 
     private lateinit var bottomNavView : BottomNavigationView
     private lateinit var navController: NavController
@@ -46,13 +49,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+        mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         initUI()
     }
 
     private fun initUI() {
-        homeViewModel.getCategories()
+        mainViewModel.getCategories()
 
         configMainDrawer()
         configBottomNav()
@@ -65,8 +68,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun configApiState() {
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
-                homeViewModel.mainApiState.collect{
+            repeatOnLifecycle(State.STARTED){
+                mainViewModel.mainApiState.collect{
                     when(it){
                         is Loading -> apiStateLoading()
                         is Success -> apiStateSuccess(it)
@@ -95,8 +98,8 @@ class MainActivity : AppCompatActivity() {
     private fun configUiState() {
         // get state from viewModel
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
-                homeViewModel.mainUiState.collect{
+            repeatOnLifecycle(State.STARTED){
+                mainViewModel.mainUiState.collect{
                     when(it){
                         HomeProductList -> uiStateHomeProductList()
                         HomeCategoryPlp -> uiStateHomeCategoryPlp()
@@ -108,6 +111,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        lifecycleScope.launch {
+            repeatOnLifecycle(State.STARTED){
+                mainViewModel.goBackToHome.collect{
+                    if (it){
+                        goBackToHome()
+                        mainViewModel.setGoBackToHome(false)
+                    }
+                }
+            }
+        }
     }
 
     private fun uiStateHomeProductList() {
@@ -176,12 +189,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun onCategorySelected(category: String){
         binding.drawerLayout.close()
-        homeViewModel.goToCategory(category)
+        mainViewModel.goToCategory(category)
     }
 
     private fun configListeners() {
         binding.btnBack.setOnClickListener {
-            homeViewModel.onBackPressed.value?.let { it() }
+            mainViewModel.onBackPressed.value?.let { it() }
         }
     }
 
@@ -190,6 +203,10 @@ class MainActivity : AppCompatActivity() {
         val navHost = supportFragmentManager.findFragmentById(R.id.mainFragmentContainerView) as NavHostFragment
         navController = navHost.navController
         bottomNavView.setupWithNavController(navController)
+    }
+
+    fun goBackToHome(){
+        binding.bottomNavView.selectedItemId = R.id.homeContainerFragment
     }
 
     private fun configSearchBar() {
@@ -206,9 +223,9 @@ class MainActivity : AppCompatActivity() {
 
                 val query = binding.etSearch.text.toString().trim()
                 if (query.isNotEmpty()){
-                    homeViewModel.setQuery(query)
+                    mainViewModel.setQuery(query)
                 } else {
-                    homeViewModel.onBackPressed.value?.let { it() }
+                    mainViewModel.onBackPressed.value?.let { it() }
                 }
 
                 return@setOnEditorActionListener true

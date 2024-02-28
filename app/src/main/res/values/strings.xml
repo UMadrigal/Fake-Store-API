@@ -44,4 +44,7 @@
     <string name="text_review_score">Calificación</string>
     <string name="text_product_sign_price">$ </string>
     <string name="text_title_cart_fragment">Carrito de compras</string>
+    <string name="text_empty_cart">Tu carrito está vacío</string>
+    <string name="text_empty_cart_message">¡Agrega productos a tu carrito y consigue envío gratis!</string>
+    <string name="text_cart_empty_explore_products">Explorar productos</string>
 </resources>

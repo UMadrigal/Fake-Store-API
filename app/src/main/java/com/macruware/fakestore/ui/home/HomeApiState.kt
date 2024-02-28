@@ -1,7 +1,6 @@
 package com.macruware.fakestore.ui.home
 
 import com.macruware.fakestore.domain.model.CategoryProductModel
-import com.macruware.fakestore.domain.model.ProductModel
 
 sealed class HomeApiState {
     data object Loading: HomeApiState()

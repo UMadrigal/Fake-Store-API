@@ -1,12 +1,11 @@
 package com.macruware.fakestore.ui.home.categoryplp
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -17,10 +16,9 @@ import com.macruware.fakestore.R
 import com.macruware.fakestore.databinding.FragmentHomeCategoryPlpBinding
 import com.macruware.fakestore.domain.model.HomeFragmentProvider
 import com.macruware.fakestore.domain.model.ProductModel
-import com.macruware.fakestore.ui.home.HomeViewModel
 import com.macruware.fakestore.ui.home.categoryplp.adapter.CategoryPlpAdapter
-import com.macruware.fakestore.ui.main.MainUiState
-import com.macruware.fakestore.ui.main.MainUiState.*
+import com.macruware.fakestore.ui.main.MainViewModel
+import com.macruware.fakestore.ui.main.MainUiState.HomeCategoryPlp
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -28,7 +26,7 @@ import kotlinx.coroutines.launch
 class HomeCategoryPlpFragment : Fragment() {
     private var _binding: FragmentHomeCategoryPlpBinding? = null
     private val binding get() = _binding!!
-    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var mainViewModel: MainViewModel
 
     private val callback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -43,22 +41,22 @@ class HomeCategoryPlpFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeCategoryPlpBinding.inflate(layoutInflater, container, false)
-        homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
+        mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        homeViewModel.setLambdaFunction{ searchIntoCategory() }
-        homeViewModel.setOnBackPressedFunction { onBtnBackPressed() }
-        homeViewModel.setMainUiState(HomeCategoryPlp)
+        mainViewModel.setLambdaFunction{ searchIntoCategory() }
+        mainViewModel.setOnBackPressedFunction { onBtnBackPressed() }
+        mainViewModel.setMainUiState(HomeCategoryPlp)
 
         initUI()
     }
 
     private fun searchIntoCategory() {
-        homeViewModel.searchIntoCategory()
+        mainViewModel.searchIntoCategory()
     }
 
     private fun initUI() {
@@ -67,11 +65,11 @@ class HomeCategoryPlpFragment : Fragment() {
     }
 
     private fun fetchData(){
-        categoryPlpAdapter.updateList(homeViewModel.productListFromCategory.value)
+        categoryPlpAdapter.updateList(mainViewModel.productListFromCategory.value)
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                homeViewModel.productListFromCategory.collect{
+                mainViewModel.productListFromCategory.collect{
                     categoryPlpAdapter.updateList(it)
                 }
             }
@@ -96,7 +94,7 @@ class HomeCategoryPlpFragment : Fragment() {
                 )
         )
 
-        homeViewModel.setCurrentProduct(product)
+        mainViewModel.setCurrentProduct(product)
 
     }
     

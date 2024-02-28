@@ -2,7 +2,6 @@ package com.macruware.fakestore.ui.home.plp.adapter
 
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.macruware.fakestore.databinding.ItemCategoryAndProductBinding
 import com.macruware.fakestore.domain.model.CategoryProductModel
