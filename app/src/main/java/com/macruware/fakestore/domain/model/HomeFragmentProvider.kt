@@ -4,5 +4,6 @@ package com.macruware.fakestore.domain.model
 enum class HomeFragmentProvider {
     HomeProductListFragment,
     HomeCategoryPlpFragment,
-    HomeSearchedProductFragment
+    HomeSearchedProductFragment,
+    CartDetailFragment
 }

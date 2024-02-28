@@ -102,6 +102,7 @@ class MainActivity : AppCompatActivity() {
                         HomeCategoryPlp -> uiStateHomeCategoryPlp()
                         HomeSearchedProduct -> uiStateHomeSearchedProduct()
                         HomeProductDetail -> uiStateHomeProductDetail()
+                        CartDetailFragment -> uiStateCartDetailFragment()
                     }
                 }
             }
@@ -117,6 +118,7 @@ class MainActivity : AppCompatActivity() {
         binding.etSearch.text.clear()
         binding.tvTitle.isVisible = false
         binding.btnNotifications.isVisible = true
+        binding.bottomNavView.isVisible = true
     }
 
     private fun uiStateHomeCategoryPlp() {
@@ -126,6 +128,7 @@ class MainActivity : AppCompatActivity() {
         binding.searchContainer.isVisible = true
         binding.tvTitle.isVisible = false
         binding.btnNotifications.isVisible = false
+        binding.bottomNavView.isVisible = true
     }
 
     private fun uiStateHomeSearchedProduct() {
@@ -135,6 +138,7 @@ class MainActivity : AppCompatActivity() {
         binding.searchContainer.isVisible = true
         binding.tvTitle.isVisible = false
         binding.btnNotifications.isVisible = false
+        binding.bottomNavView.isVisible = true
     }
 
     private fun uiStateHomeProductDetail() {
@@ -144,6 +148,19 @@ class MainActivity : AppCompatActivity() {
         binding.searchContainer.isVisible = false
         binding.tvTitle.isVisible = false
         binding.btnNotifications.isVisible = false
+        binding.bottomNavView.isVisible = false
+    }
+
+    private fun uiStateCartDetailFragment() {
+        binding.btnMenu.isVisible = false
+        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+        binding.btnBack.isVisible = true
+        binding.searchContainer.isVisible = false
+//        binding.etSearch.text.clear()
+        binding.tvTitle.isVisible = true
+        binding.tvTitle.text = getString(R.string.text_title_cart_fragment)
+        binding.btnNotifications.isVisible = false
+        binding.bottomNavView.isVisible = false
     }
 
     private fun configCategoriesRecycler() {

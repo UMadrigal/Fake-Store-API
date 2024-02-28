@@ -90,14 +90,15 @@
                     style="@style/SubTitleText"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/common_size_header_button"
-                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginHorizontal="61dp"
                     android:gravity="center"
                     android:visibility="gone"
+                    android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/btnNotifications"
-                    app:layout_constraintStart_toEndOf="@+id/leftButtonsContainer"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Categoría" />
+                    tools:text="Carrito de compras" />
 
                 <ImageButton
                     android:id="@+id/btnNotifications"

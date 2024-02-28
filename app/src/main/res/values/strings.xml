@@ -8,6 +8,7 @@
     <string name="text_subtitle_login">Ingresa tus datos para continuar</string>
     <string name="text_btn_login">Iniciar sesión</string>
     <string name="text_btn_checkout">Continuar compra</string>
+    <string name="text_btn_add_to_cart">Agregar al carrito</string>
     <string name="text_label_username">Usuario</string>
     <string name="text_label_password">Contraseña</string>
     <string name="text_dont_you_have_account">¿Aún no tienes cuenta?</string>
@@ -42,4 +43,5 @@
     <string name="text_pdp_reviews">Reseñas</string>
     <string name="text_review_score">Calificación</string>
     <string name="text_product_sign_price">$ </string>
+    <string name="text_title_cart_fragment">Carrito de compras</string>
 </resources>

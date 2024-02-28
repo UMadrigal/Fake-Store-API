@@ -244,13 +244,14 @@ class HomeViewModel @Inject constructor(
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     private var _cartProductList = MutableStateFlow<List<CartProductModel>>(
-        mutableListOf(
-            CartProductModel(2, ProductModel("Electronic Product 1", "49.99", "jewerly","Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10)),
-            CartProductModel(1, ProductModel("Electronic Product 2", "99.99", "jewerly", "Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8)),
-            CartProductModel(3, ProductModel("Electronic Product 3", "29.99", "jewerly", "Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15)),
-            CartProductModel(1, ProductModel("Electronic Product 4", "79.99", "jewerly", "Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12)),
-            CartProductModel(2, ProductModel("Electronic Product 5", "59.99", "jewerly", "Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 20))
-        )
+        emptyList()
+//        mutableListOf(
+//            CartProductModel(2, ProductModel("Electronic Product 1", "49.99", "jewerly","Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10)),
+//            CartProductModel(1, ProductModel("Electronic Product 2", "99.99", "jewerly", "Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8)),
+//            CartProductModel(3, ProductModel("Electronic Product 3", "29.99", "jewerly", "Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15)),
+//            CartProductModel(1, ProductModel("Electronic Product 4", "79.99", "jewerly", "Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12)),
+//            CartProductModel(2, ProductModel("Electronic Product 5", "59.99", "jewerly", "Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 20))
+//        )
     )
     val cartProductList: StateFlow<List<CartProductModel>> get() = _cartProductList
 
@@ -271,9 +272,15 @@ class HomeViewModel @Inject constructor(
         setCartProductList(newList)
     }
 
+
+    private var _isCartProductDeleted = MutableStateFlow(false)
+    val isCartProductDeleted : StateFlow<Boolean> get() = _isCartProductDeleted
+    private var deletedCartProduct : CartProductModel? = null
+    private var deletedCartProductIndex : Int? = null
+
     fun removeProductFromCart(cartProduct: CartProductModel) {
         val newList : MutableList<CartProductModel> = cartProductList.value.map { it.copy() }.toMutableList()
-
+        resetDeletedCartProduct()
         for (cartItem in newList){
             if (cartItem.product.name == cartProduct.product.name){
 
@@ -281,13 +288,33 @@ class HomeViewModel @Inject constructor(
                 if (newList[index].quantity > 1){
                     newList[index].quantity--
                 } else {
+                    deletedCartProduct = newList[index]
+                    deletedCartProductIndex = index
                     newList.removeAt(index)
+                    _isCartProductDeleted.value = true
                 }
 
                 setCartProductList(newList)
                 break
             }
         }
+    }
+
+    fun undoRemoveProductFromCart(){
+        if (isCartProductDeleted.value){
+            if (deletedCartProduct != null && deletedCartProductIndex != null){
+                val newList : MutableList<CartProductModel> = cartProductList.value.map { it.copy() }.toMutableList()
+                newList.add(deletedCartProductIndex!!, deletedCartProduct!!)
+                resetDeletedCartProduct()
+                setCartProductList(newList)
+            }
+        }
+    }
+
+    fun resetDeletedCartProduct(){
+        deletedCartProduct = null
+        deletedCartProductIndex = null
+        _isCartProductDeleted.value = false
     }
 
     private fun setCartProductList(list: List<CartProductModel>){
@@ -297,6 +324,7 @@ class HomeViewModel @Inject constructor(
 
     fun getCartProductList(){
         // Llamar a firebase
+        _mainUiState.value = MainUiState.CartDetailFragment
         val cartProductList = _cartProductList.value
         setCartProductList(cartProductList)
     }

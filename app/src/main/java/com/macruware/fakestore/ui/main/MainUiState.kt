@@ -5,4 +5,5 @@ sealed class MainUiState{
     data object HomeCategoryPlp: MainUiState()
     data object HomeSearchedProduct: MainUiState()
     data object HomeProductDetail: MainUiState()
+    data object CartDetailFragment: MainUiState()
 }
