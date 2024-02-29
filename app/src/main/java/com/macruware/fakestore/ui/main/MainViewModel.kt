@@ -348,7 +348,7 @@ class MainViewModel @Inject constructor(
     private var _isCurrentProductInFavorites = MutableStateFlow(false)
     val isCurrentProductInFavorites : StateFlow<Boolean> get() = _isCurrentProductInFavorites
 
-    fun setCurrentProductInFavorites(boolean: Boolean){
+    private fun setCurrentProductInFavorites(boolean: Boolean){
         _isCurrentProductInFavorites.value = boolean
     }
 
@@ -379,6 +379,7 @@ class MainViewModel @Inject constructor(
                 }
             }
         }
+        setCurrentProductInFavorites(isInFavorites)
         return isInFavorites
     }
 

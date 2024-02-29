@@ -91,7 +91,6 @@ class FavoritesListFragment : Fragment() {
                 .actionFavoritesListFragmentToHomeProductDetailFragment3(HomeFragmentProvider.FavoritesListFragment)
         )
 
-        mainViewModel.setCurrentProductInFavorites(favoriteProduct.isFavorite)
         mainViewModel.setCurrentProduct(favoriteProduct.product)
     }
 

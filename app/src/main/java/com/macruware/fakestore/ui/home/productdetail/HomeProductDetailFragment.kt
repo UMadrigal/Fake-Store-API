@@ -106,7 +106,7 @@ class HomeProductDetailFragment : Fragment() {
             }
         }
 
-        if (mainViewModel.isCurrentProductInFavorites.value){
+        if (mainViewModel.isProductInFavorites()){
             binding.btnAddToFavorites.setImageResource(R.drawable.ic_favorite_selected)
         } else {
             binding.btnAddToFavorites.setImageResource(R.drawable.ic_favorite)
