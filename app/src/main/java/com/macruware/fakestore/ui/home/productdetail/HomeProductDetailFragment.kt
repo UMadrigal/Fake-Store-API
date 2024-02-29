@@ -22,6 +22,7 @@ import com.google.android.material.snackbar.Snackbar.*
 import com.macruware.fakestore.R
 import com.macruware.fakestore.databinding.FragmentHomeProductDetailBinding
 import com.macruware.fakestore.domain.model.CartProductModel
+import com.macruware.fakestore.domain.model.FavoriteProductModel
 import com.macruware.fakestore.domain.model.HomeFragmentProvider
 import com.macruware.fakestore.domain.model.HomeFragmentProvider.*
 import com.macruware.fakestore.domain.model.ProductModel
@@ -41,6 +42,7 @@ class HomeProductDetailFragment : Fragment() {
     private val previousFragment: HomeProductDetailFragmentArgs by navArgs()
 
     private lateinit var snackBar: Snackbar
+    private var snackBarMessage = ""
 
     private val callback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -63,7 +65,8 @@ class HomeProductDetailFragment : Fragment() {
         mainViewModel.setMainUiState(HomeProductDetail)
         mainViewModel.setOnBackPressedFunction { onBtnBackPressed() }
 
-        snackBar = make(binding.root, "Producto agregado al carrito", LENGTH_SHORT)
+        snackBar = make(binding.root, snackBarMessage, LENGTH_SHORT)
+
         initUI()
     }
 
@@ -76,7 +79,18 @@ class HomeProductDetailFragment : Fragment() {
         binding.btnAddToCart.setOnClickListener {
             val newCartItem = CartProductModel(1, mainViewModel.currentProduct.value!!)
             mainViewModel.addProductToCart(newCartItem)
-            showSnackBar()
+            showSnackBar("Producto agregado al carrito")
+        }
+
+        binding.btnAddToFavorites.setOnClickListener {
+            if (mainViewModel.isProductInFavorites()){
+                mainViewModel.removeProductFromFavorites(FavoriteProductModel(false, mainViewModel.currentProduct.value!!))
+                showSnackBar("Producto eliminado de favoritos")
+            } else {
+                val newFavoriteItem = FavoriteProductModel(true, mainViewModel.currentProduct.value!!)
+                mainViewModel.addProductToFavorites(newFavoriteItem)
+                showSnackBar("Producto agregado a favoritos")
+            }
         }
     }
 
@@ -88,6 +102,24 @@ class HomeProductDetailFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED){
                 mainViewModel.currentProduct.collect{
                     currentProduct = it
+                }
+            }
+        }
+
+        if (mainViewModel.isCurrentProductInFavorites.value){
+            binding.btnAddToFavorites.setImageResource(R.drawable.ic_favorite_selected)
+        } else {
+            binding.btnAddToFavorites.setImageResource(R.drawable.ic_favorite)
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                mainViewModel.isCurrentProductInFavorites.collect{
+                    if (it){
+                        binding.btnAddToFavorites.setImageResource(R.drawable.ic_favorite_selected)
+                    } else {
+                        binding.btnAddToFavorites.setImageResource(R.drawable.ic_favorite)
+                    }
                 }
             }
         }
@@ -127,7 +159,10 @@ class HomeProductDetailFragment : Fragment() {
     }
 
     @SuppressLint("RestrictedApi")
-    private fun showSnackBar(){
+    private fun showSnackBar(message: String){
+        snackBarMessage = message
+
+        snackBar.setText(snackBarMessage)
 
         val snackbarLayout = snackBar.view as SnackbarLayout
         val layoutParams = snackbarLayout.layoutParams as FrameLayout.LayoutParams
@@ -141,12 +176,14 @@ class HomeProductDetailFragment : Fragment() {
 
     private fun onBtnBackPressed(){
         snackBar.dismiss()
+        mainViewModel.resetDeletedFavoriteProduct()
         // Sobreescribimos el onBackPressed y dependiendo del previousFragment, navegamos hacia el correspondiente
         when(previousFragment.fragment){
             HomeProductListFragment -> findNavController().navigate(R.id.action_homeProductDetailFragment_to_homeProductListFragment)
             HomeCategoryPlpFragment -> findNavController().navigate(R.id.action_homeProductDetailFragment_to_homeCategoryPlpFragment)
             HomeSearchedProductFragment -> findNavController().navigate(R.id.action_homeProductDetailFragment_to_searchedProductFragment)
             HomeFragmentProvider.CartDetailFragment -> findNavController().navigate(R.id.action_homeProductDetailFragment2_to_cartDetailFragment)
+            HomeFragmentProvider.FavoritesListFragment -> findNavController().navigate(R.id.action_homeProductDetailFragment3_to_favoritesListFragment)
         }
 
         mainViewModel.setCurrentProduct(null)

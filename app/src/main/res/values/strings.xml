@@ -45,6 +45,10 @@
     <string name="text_product_sign_price">$ </string>
     <string name="text_title_cart_fragment">Carrito de compras</string>
     <string name="text_empty_cart">Tu carrito está vacío</string>
+    <string name="text_empty_favorites">Tu lista de favoritos está vacía</string>
     <string name="text_empty_cart_message">¡Agrega productos a tu carrito y consigue envío gratis!</string>
+    <string name="text_empty_favorites_message">¡Aquí aparecerán tus productos favoritos para que puedas acceder a ellos más fácilmente!</string>
     <string name="text_cart_empty_explore_products">Explorar productos</string>
+    <string name="text_favorite_empty_explore_products">Explorar productos</string>
+    <string name="text_title_favorites_fragment">Mis favoritos</string>
 </resources>

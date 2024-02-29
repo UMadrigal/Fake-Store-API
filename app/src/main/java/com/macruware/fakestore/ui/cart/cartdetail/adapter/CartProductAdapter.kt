@@ -19,9 +19,6 @@ class CartProductAdapter(
 
         cartProductList = list
         result.dispatchUpdatesTo(this)
-
-//        cartProductList = list
-//        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartProductViewHolder {

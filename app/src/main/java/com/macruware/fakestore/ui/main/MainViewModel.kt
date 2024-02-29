@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.macruware.fakestore.domain.model.CartProductModel
 import com.macruware.fakestore.domain.model.CategoryNameModel
 import com.macruware.fakestore.domain.model.CategoryProductModel
+import com.macruware.fakestore.domain.model.FavoriteProductModel
 import com.macruware.fakestore.domain.model.ProductModel
 import com.macruware.fakestore.domain.usecase.GetAllCategoriesUseCase
 import com.macruware.fakestore.domain.usecase.GetAllProductsUseCase
@@ -254,16 +255,8 @@ class MainViewModel @Inject constructor(
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    private var _cartProductList = MutableStateFlow<List<CartProductModel>>(
-        emptyList()
-//        mutableListOf(
-//            CartProductModel(2, ProductModel("Electronic Product 1", "49.99", "jewerly","Description 1", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.5, 10)),
-//            CartProductModel(1, ProductModel("Electronic Product 2", "99.99", "jewerly", "Description 2", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.0, 8)),
-//            CartProductModel(3, ProductModel("Electronic Product 3", "29.99", "jewerly", "Description 3", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.8, 15)),
-//            CartProductModel(1, ProductModel("Electronic Product 4", "79.99", "jewerly", "Description 4", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 3.5, 12)),
-//            CartProductModel(2, ProductModel("Electronic Product 5", "59.99", "jewerly", "Description 5", "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg", 4.2, 20))
-//        )
-    )
+    //////////// Cart ///////////
+    private var _cartProductList = MutableStateFlow<List<CartProductModel>>(emptyList())
     val cartProductList: StateFlow<List<CartProductModel>> get() = _cartProductList
 
     fun addProductToCart(cartProduct: CartProductModel) {
@@ -345,5 +338,110 @@ class MainViewModel @Inject constructor(
         setCartProductList(cartProductList)
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+//////////// Favorites ///////////
+    private var _favoriteProductList = MutableStateFlow<List<FavoriteProductModel>>(emptyList())
+    val favoriteProductList: StateFlow<List<FavoriteProductModel>> get() = _favoriteProductList
+
+    private var _isCurrentProductInFavorites = MutableStateFlow(false)
+    val isCurrentProductInFavorites : StateFlow<Boolean> get() = _isCurrentProductInFavorites
+
+    fun setCurrentProductInFavorites(boolean: Boolean){
+        _isCurrentProductInFavorites.value = boolean
+    }
+
+    fun addProductToFavorites(favoriteProduct: FavoriteProductModel) {
+        val newList : MutableList<FavoriteProductModel> = favoriteProductList.value.map { it.copy() }.toMutableList()
+
+        if (!newList.contains(favoriteProduct)){
+            newList.add(favoriteProduct)
+
+            if (currentProduct.value != null){
+                if(favoriteProduct.product.name == currentProduct.value!!.name){
+                    _isCurrentProductInFavorites.value = true
+                }
+            } else {
+                _isCurrentProductInFavorites.value = false
+            }
+
+            setFavoriteProductList(newList)
+        }
+    }
+
+    fun isProductInFavorites(): Boolean{
+        var isInFavorites = false
+        if (favoriteProductList.value.isNotEmpty() && currentProduct.value != null){
+            for (favoriteItem in favoriteProductList.value){
+                if(favoriteItem.product.name == currentProduct.value!!.name){
+                    isInFavorites = true
+                }
+            }
+        }
+        return isInFavorites
+    }
+
+    private var _isFavoriteProductDeleted = MutableStateFlow(false)
+    val isFavoriteProductDeleted : StateFlow<Boolean> get() = _isFavoriteProductDeleted
+    private var deletedFavoriteProduct : FavoriteProductModel? = null
+    private var deletedFavoriteProductIndex : Int? = null
+
+    fun removeProductFromFavorites(favoriteProduct: FavoriteProductModel) {
+        val newList : MutableList<FavoriteProductModel> = favoriteProductList.value.map { it.copy() }.toMutableList()
+        resetDeletedFavoriteProduct()
+        for (favoriteItem in favoriteProductList.value){
+            if (favoriteItem.product.name == favoriteProduct.product.name){
+                val index = newList.indexOf(favoriteItem)
+                deletedFavoriteProduct = newList[index]
+                deletedFavoriteProductIndex = index
+                newList.removeAt(index)
+                _isFavoriteProductDeleted.value = true
+
+                if (currentProduct.value != null){
+                    if(favoriteProduct.product.name == currentProduct.value!!.name){
+                        _isCurrentProductInFavorites.value = false
+                    }
+                } else {
+                    _isCurrentProductInFavorites.value = false
+                }
+
+                setFavoriteProductList(newList)
+            }
+        }
+    }
+
+    fun undoRemoveProductFromFavorites(){
+        if (isFavoriteProductDeleted.value){
+            if (deletedFavoriteProduct != null && deletedFavoriteProductIndex != null){
+                val newList : MutableList<FavoriteProductModel> = favoriteProductList.value.map { it.copy() }.toMutableList()
+                newList.add(deletedFavoriteProductIndex!!, deletedFavoriteProduct!!)
+                resetDeletedFavoriteProduct()
+                setFavoriteProductList(newList)
+            }
+        }
+    }
+
+    fun resetDeletedFavoriteProduct(){
+        deletedFavoriteProduct = null
+        deletedFavoriteProductIndex = null
+        _isFavoriteProductDeleted.value = false
+    }
+
+    private var _isEmptyFavorites = MutableStateFlow(true)
+    val isEmptyFavorites : StateFlow<Boolean> get() = _isEmptyFavorites
+
+    private fun setFavoriteProductList(list: List<FavoriteProductModel>){
+        _isEmptyFavorites.value = list.isEmpty()
+        _favoriteProductList.value = list
+        // Guardar en firebase
+    }
+
+    fun getFavoritesProductList(){
+        // Llamar a firebase
+        _mainUiState.value = MainUiState.FavoritesListFragment
+        val favoriteProductList = _favoriteProductList.value
+        setFavoriteProductList(favoriteProductList)
+    }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 }

@@ -25,11 +25,7 @@ import com.macruware.fakestore.databinding.ActivityMainBinding
 import com.macruware.fakestore.ui.main.MainApiState.Error
 import com.macruware.fakestore.ui.main.MainApiState.Loading
 import com.macruware.fakestore.ui.main.MainApiState.Success
-import com.macruware.fakestore.ui.main.MainUiState.CartDetailFragment
-import com.macruware.fakestore.ui.main.MainUiState.HomeCategoryPlp
-import com.macruware.fakestore.ui.main.MainUiState.HomeProductDetail
-import com.macruware.fakestore.ui.main.MainUiState.HomeProductList
-import com.macruware.fakestore.ui.main.MainUiState.HomeSearchedProduct
+import com.macruware.fakestore.ui.main.MainUiState.*
 import com.macruware.fakestore.ui.main.adapter.CategoryNameAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -106,6 +102,7 @@ class MainActivity : AppCompatActivity() {
                         HomeSearchedProduct -> uiStateHomeSearchedProduct()
                         HomeProductDetail -> uiStateHomeProductDetail()
                         CartDetailFragment -> uiStateCartDetailFragment()
+                        FavoritesListFragment -> uiStateFavoritesListFragment()
                     }
                 }
             }
@@ -169,9 +166,19 @@ class MainActivity : AppCompatActivity() {
         binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         binding.btnBack.isVisible = true
         binding.searchContainer.isVisible = false
-//        binding.etSearch.text.clear()
         binding.tvTitle.isVisible = true
         binding.tvTitle.text = getString(R.string.text_title_cart_fragment)
+        binding.btnNotifications.isVisible = false
+        binding.bottomNavView.isVisible = false
+    }
+
+    private fun uiStateFavoritesListFragment() {
+        binding.btnMenu.isVisible = false
+        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+        binding.btnBack.isVisible = true
+        binding.searchContainer.isVisible = false
+        binding.tvTitle.isVisible = true
+        binding.tvTitle.text = getString(R.string.text_title_favorites_fragment)
         binding.btnNotifications.isVisible = false
         binding.bottomNavView.isVisible = false
     }
@@ -205,7 +212,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavView.setupWithNavController(navController)
     }
 
-    fun goBackToHome(){
+    private fun goBackToHome(){
         binding.bottomNavView.selectedItemId = R.id.homeContainerFragment
     }
 

@@ -13,7 +13,8 @@ class CartProductViewHolder(view: View): ViewHolder(view){
 
     fun bind(item: CartProductModel,
              onItemClickListener: (CartProductModel) -> Unit,
-             onQuantityClickListener: (CartProductModel, Boolean) -> Unit){
+             onQuantityClickListener: (CartProductModel, Boolean) -> Unit) {
+
         Glide.with(context)
             .load(item.product.image)
             .placeholder(R.drawable.img_place_holder)

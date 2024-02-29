@@ -5,5 +5,6 @@ enum class HomeFragmentProvider {
     HomeProductListFragment,
     HomeCategoryPlpFragment,
     HomeSearchedProductFragment,
-    CartDetailFragment
+    CartDetailFragment,
+    FavoritesListFragment
 }

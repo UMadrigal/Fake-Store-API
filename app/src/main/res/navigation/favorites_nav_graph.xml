@@ -9,5 +9,21 @@
         android:id="@+id/favoritesListFragment"
         android:name="com.macruware.fakestore.ui.favorites.favoriteslist.FavoritesListFragment"
         android:label="fragment_favorites_list"
-        tools:layout="@layout/fragment_favorites_list" />
+        tools:layout="@layout/fragment_favorites_list" >
+        <action
+            android:id="@+id/action_favoritesListFragment_to_homeProductDetailFragment3"
+            app:destination="@id/homeProductDetailFragment3" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeProductDetailFragment3"
+        android:name="com.macruware.fakestore.ui.home.productdetail.HomeProductDetailFragment"
+        android:label="fragment_home_product_detail"
+        tools:layout="@layout/fragment_home_product_detail" >
+        <action
+            android:id="@+id/action_homeProductDetailFragment3_to_favoritesListFragment"
+            app:destination="@id/favoritesListFragment" />
+        <argument
+            android:name="fragment"
+            app:argType="com.macruware.fakestore.domain.model.HomeFragmentProvider" />
+    </fragment>
 </navigation>

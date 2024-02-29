@@ -6,4 +6,5 @@ sealed class MainUiState{
     data object HomeSearchedProduct: MainUiState()
     data object HomeProductDetail: MainUiState()
     data object CartDetailFragment: MainUiState()
+    data object FavoritesListFragment: MainUiState()
 }
